@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="select_time_check">
+        <item>하루 중</item>
+        <item>지금 부터</item>
+        <item>원하는 시간</item>
+    </string-array>
+</resources>

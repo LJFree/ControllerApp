@@ -1,0 +1,167 @@
+package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter;
+
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
+
+import java.util.List;
+
+public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.ViewHolder> {
+
+
+    private List<AppListModel> mData;
+    private onClicked clicked;
+    private PackageManager mPm;
+
+    public interface onClicked {
+        void onClicked(AppListModel model);
+
+        void onAddClicked();
+
+        void onLongClicked(int position);
+    }
+
+
+    public MainRecyclerViewAdapter(List<AppListModel> mData) {
+        this.mData = mData;
+    }
+
+    public void setPm(PackageManager mPm) {
+        this.mPm = mPm;
+    }
+
+    public void onSetClicked(onClicked clicked) {
+        this.clicked = clicked;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_icon_list, viewGroup, false);
+
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+
+        if (i != mData.size()) {
+
+            final AppListModel data = mData.get(i);
+            final int position = i;
+
+            String name = data.getAppName(mPm);
+            String time = data.getAllDayTime();
+
+            viewHolder.icon.setImageDrawable(data.getIcon());
+            viewHolder.name.setText(name);
+            viewHolder.time.setText(time + "분");
+
+            viewHolder.icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clicked.onClicked(data);
+                }
+            });
+            viewHolder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clicked.onClicked(data);
+                }
+            });
+            viewHolder.time.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clicked.onClicked(data);
+                }
+            });
+
+            viewHolder.icon.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    clicked.onLongClicked(position);
+                    return false;
+                }
+            });
+            viewHolder.name.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    clicked.onLongClicked(position);
+                    return false;
+                }
+            });
+            viewHolder.time.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    clicked.onLongClicked(position);
+                    return false;
+                }
+            });
+        } else {
+
+            viewHolder.icon.clearColorFilter();
+            viewHolder.name.clearComposingText();
+            viewHolder.time.clearComposingText();
+
+            viewHolder.icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clicked.onAddClicked();
+                }
+            });
+
+            viewHolder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clicked.onAddClicked();
+                }
+            });
+            viewHolder.time.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clicked.onAddClicked();
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mData.size() + 1;
+    }
+
+    public void removeItem(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(0, mData.size());
+    }
+
+    public void addItem(int position, AppListModel model) {
+        mData.add(position, model);
+        notifyItemInserted(position);
+        notifyItemRangeChanged(0, mData.size());
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView icon;
+        private TextView name;
+        private TextView time;
+
+        private ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            icon = itemView.findViewById(R.id.recycler_icon);
+            name = itemView.findViewById(R.id.recycler_name);
+            time = itemView.findViewById(R.id.recycler_time);
+        }
+    }
+}
