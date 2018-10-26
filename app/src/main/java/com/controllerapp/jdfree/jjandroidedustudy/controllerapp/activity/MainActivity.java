@@ -168,8 +168,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     public void deleteListener(int position) {
         mAdapter.removeItem(position);
-        stopService(mIntent);
 
+        if (mAppList.size() == 0) {
+            stopService(mIntent);
+        }
         listSave();
         Toast.makeText(this, "앱 제어 삭제 완료", Toast.LENGTH_SHORT).show();
     }

@@ -24,16 +24,14 @@ public class CheckTimeAppController extends Service implements Runnable {
 
     @Override
     public void onCreate() {
-
-//        mList = getApplicationInfo()
-
-//                intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
-
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+        mList = intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
 
         mThread = new Thread(this);
         mPlayer = MediaPlayer.create(this, R.raw.song);
@@ -52,6 +50,7 @@ public class CheckTimeAppController extends Service implements Runnable {
         isCheck = false;
         mPlayer.stop();
         mThread.interrupt();
+        mThread = null;
         super.onDestroy();
     }
 
@@ -62,6 +61,10 @@ public class CheckTimeAppController extends Service implements Runnable {
             if (mList == null) {
 //                Toast.makeText(this, "mList 받는 값 없음.", Toast.LENGTH_SHORT).show();
 //                break;
+            }
+
+            for (int i = 0; i < mList.size(); i++) {
+//                Log.e("fff", "run: " + mList.get(i));
             }
         }
     }
