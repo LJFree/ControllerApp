@@ -34,6 +34,11 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
         this.mData = mData;
     }
 
+    public MainRecyclerViewAdapter(List<AppListModel> mData, PackageManager mPm) {
+        this.mData = mData;
+        this.mPm = mPm;
+    }
+
     public void setPm(PackageManager mPm) {
         this.mPm = mPm;
     }

@@ -33,6 +33,10 @@ public class AppListModel implements Parcelable {
     }
     /////////////////////////////////////////////////////////////////////////////////
 
+    public AppListModel() {
+
+    }
+
     public AppListModel(ApplicationInfo appInfo) {
         this.appInfo = appInfo;
     }

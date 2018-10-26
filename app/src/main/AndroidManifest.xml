@@ -5,7 +5,8 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="ControllerApp"
+        android:resizeableActivity="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -24,8 +25,13 @@
         <activity android:name=".activity.MainActivity" />
         <activity
             android:name=".activity.AllAppListControlActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activity.CheckTimeActivity"></activity>
+        <activity
+            android:name=".activity.CheckTimeActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".controller.CheckTimeAppController" />
     </application>
 
 </manifest>
