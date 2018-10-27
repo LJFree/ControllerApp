@@ -44,6 +44,8 @@ public class CheckTimeActivity extends AppCompatActivity {
                 } else if (position == 2) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.check_time_fragment, mSelectTimeCheckFragment).commit();
                 }
+
+                getSupportFragmentManager().beginTransaction().commit();
             }
 
             @Override

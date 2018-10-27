@@ -1,6 +1,7 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
@@ -8,54 +9,61 @@ import android.os.Parcelable;
 
 public class AppListModel implements Parcelable {
 
-    private Drawable icon;
+    private String name;
     private String allDayTime;
-    private ApplicationInfo appInfo;
+    private String packageName;
 
-
-    /////////////////////////////////////////////////////////////////////////////////
-    private PackageManager mPackageManager;
-
-    public void setmPackageManager(PackageManager mPackageManager) {
-        this.mPackageManager = mPackageManager;
-    }
-
-    public String getPackageName() {
-        return appInfo.packageName;
-    }
-
-    public String getAppName(PackageManager packageManager) {
-        return String.valueOf(appInfo.loadLabel(packageManager));
-    }
-
-    public void setIcon(PackageManager packageManager) {
-        this.icon = appInfo.loadIcon(packageManager);
-    }
-    /////////////////////////////////////////////////////////////////////////////////
-
+    //////////////////////////////////////////////////////////////////////////////////////////
     public AppListModel() {
-
     }
 
-    public AppListModel(ApplicationInfo appInfo) {
-        this.appInfo = appInfo;
+    public ApplicationInfo getAppInfo(PackageManager pm) {
+        try {
+            PackageInfo pi = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA);
+            return pi.applicationInfo;
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        }
     }
 
-    public AppListModel(Drawable icon, ApplicationInfo appInfo) {
-        this.icon = icon;
-        this.appInfo = appInfo;
+    public ApplicationInfo getAppInfo(PackageManager pm, String packageName) {
+        try {
+            PackageInfo pi = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA);
+            return pi.applicationInfo;
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        }
     }
 
-    public AppListModel(Drawable icon, String allDayTime, ApplicationInfo appInfo) {
-        this.icon = icon;
+    public Drawable getIcon(PackageManager pm) {
+        return getAppInfo(pm).loadIcon(pm);
+    }
+
+    public String getName(PackageManager pm) {
+        return String.valueOf(getAppInfo(pm).loadLabel(pm));
+    }
+
+    public String getPackName(PackageManager pm) {
+        return getAppInfo(pm).packageName;
+    }
+
+    public AppListModel(String name, String packageName) {
+        this.name = name;
+        this.packageName = packageName;
+    }
+//////////////////////////////////////////////////////////////////////////////////////////
+
+    public AppListModel(String name, String packageName, String allDayTime) {
+        this.name = name;
         this.allDayTime = allDayTime;
-        this.appInfo = appInfo;
+        this.packageName = packageName;
     }
 
 
     protected AppListModel(Parcel in) {
+        name = in.readString();
         allDayTime = in.readString();
-        appInfo = in.readParcelable(ApplicationInfo.class.getClassLoader());
+        packageName = in.readString();
     }
 
     public static final Creator<AppListModel> CREATOR = new Creator<AppListModel>() {
@@ -70,12 +78,12 @@ public class AppListModel implements Parcelable {
         }
     };
 
-    public Drawable getIcon() {
-        return icon;
+    public String getName() {
+        return name;
     }
 
-    public void setIcon(Drawable icon) {
-        this.icon = icon;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAllDayTime() {
@@ -86,12 +94,12 @@ public class AppListModel implements Parcelable {
         this.allDayTime = allDayTime;
     }
 
-    public ApplicationInfo getAppInfo() {
-        return appInfo;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setAppInfo(ApplicationInfo appInfo) {
-        this.appInfo = appInfo;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     @Override
@@ -99,28 +107,28 @@ public class AppListModel implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AppListModel that = (AppListModel) o;
+        AppListModel model = (AppListModel) o;
 
-        if (icon != null ? !icon.equals(that.icon) : that.icon != null) return false;
-        if (allDayTime != null ? !allDayTime.equals(that.allDayTime) : that.allDayTime != null)
+        if (name != null ? !name.equals(model.name) : model.name != null) return false;
+        if (allDayTime != null ? !allDayTime.equals(model.allDayTime) : model.allDayTime != null)
             return false;
-        return appInfo != null ? appInfo.equals(that.appInfo) : that.appInfo == null;
+        return packageName != null ? packageName.equals(model.packageName) : model.packageName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = icon != null ? icon.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (allDayTime != null ? allDayTime.hashCode() : 0);
-        result = 31 * result + (appInfo != null ? appInfo.hashCode() : 0);
+        result = 31 * result + (packageName != null ? packageName.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("AppListModel{");
-        sb.append("icon=").append(icon);
+        sb.append("name='").append(name).append('\'');
         sb.append(", allDayTime='").append(allDayTime).append('\'');
-        sb.append(", appInfo=").append(appInfo);
+        sb.append(", packageName='").append(packageName).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -132,7 +140,8 @@ public class AppListModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
         dest.writeString(allDayTime);
-        dest.writeParcelable(appInfo, flags);
+        dest.writeString(packageName);
     }
 }

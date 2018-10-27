@@ -22,7 +22,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     private PackageManager mPm;
 
     public interface onClicked {
-        void onClicked(AppListModel model);
+        void onDataClicked(AppListModel model);
 
         void onAddClicked();
 
@@ -58,35 +58,35 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
-
         if (i != mData.size()) {
 
             final AppListModel data = mData.get(i);
             final int position = i;
 
-            String name = data.getAppName(mPm);
+            String name = data.getName();
             String time = data.getAllDayTime();
 
-            viewHolder.icon.setImageDrawable(data.getIcon());
+            viewHolder.icon.setImageDrawable(data.getIcon(mPm));
+
             viewHolder.name.setText(name);
             viewHolder.time.setText(time + "분");
 
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onClicked(data);
+                    clicked.onDataClicked(data);
                 }
             });
             viewHolder.name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onClicked(data);
+                    clicked.onDataClicked(data);
                 }
             });
             viewHolder.time.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onClicked(data);
+                    clicked.onDataClicked(data);
                 }
             });
 

@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         String controlPackages = "";
 
         for (AppListModel controlApp : mAppList) {
-            controlPackages += controlApp.getPackageName() + "," + controlApp.getAllDayTime() + ";";
+            controlPackages += controlApp.getName() + "," + controlApp.getPackageName() + "," + controlApp.getAllDayTime() + ";";
         }
 
         editor.putString(APP_LIST, controlPackages);
@@ -92,28 +92,17 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         String controlPackages = preferences.getString(APP_LIST, null);
 
-        PackageManager pm = getPackageManager();
-
         if (controlPackages != null && controlPackages.trim().length() != 0) {
             String[] splitRow = controlPackages.split(";");
 
             for (String row : splitRow) {
                 String[] splitCol = row.split(",");
 
-                AppListModel model = new AppListModel();
+                String name = splitCol[0];
+                String packageName = splitCol[1];
+                String time = splitCol[2];
 
-                try {
-                    PackageInfo pi = pm.getPackageInfo(splitCol[0], pm.GET_META_DATA);
-
-                    ApplicationInfo info = pi.applicationInfo;
-                    model.setAppInfo(info);
-                    model.setIcon(pm);
-
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                model.setAllDayTime(splitCol[1]);
+                AppListModel model = new AppListModel(name, packageName, time);
 
                 mAppList.add(model);
             }
@@ -126,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     }
 
     @Override
-    public void onClicked(AppListModel model) {
+    public void onDataClicked(AppListModel model) {
 
     }
 
@@ -151,8 +140,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             AppListModel appModel = data.getParcelableExtra(SELECT_ALL_APP_INFO);
-
-            appModel.setIcon(getPackageManager());
 
             mAdapter.addItem(0, appModel);
 

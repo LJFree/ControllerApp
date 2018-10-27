@@ -60,14 +60,13 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
 
         Drawable icon = appInfo.loadIcon(mPm);
         String name = String.valueOf(appInfo.loadLabel(mPm));
+        String packageName = appInfo.packageName;
 
         viewHolder.imageView.setImageDrawable(icon);
         viewHolder.textViewName.setText(name);
 
-//        Log.d("appName , packName :   ", "onBindViewHolder: " + name + "          " + appInfo.packageName);
-
         if (onClickedListener != null) {
-            final AppListModel model = new AppListModel(appInfo);
+            final AppListModel model = new AppListModel(name, packageName);
 
             viewHolder.textViewName.setOnClickListener(new View.OnClickListener() {
                 @Override
