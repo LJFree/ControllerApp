@@ -106,8 +106,6 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
         List<ApplicationInfo> searchList = new ArrayList<>();
 
         if (textString.trim().length() == 0) {
-//            mRecyclerView.setAdapter(new AppListRecyclerViewAdapter(mAppInfoList, getPackageManager()));
-//            searchList = mAppInfoList;
             textView.setText("");
             mAdapter.setData(mAppInfoList);
         } else {
@@ -116,7 +114,6 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
                 String name = String.valueOf(applicationInfo.loadLabel(getPackageManager()));
 
                 if (name.toLowerCase().trim().contains(textString.toLowerCase().trim())) {
-//                        || name.toLowerCase().trim().contains(applicationInfo.packageName)) {
                     searchList.add(0, applicationInfo);
                 }
             }
@@ -145,8 +142,6 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
             Intent intent = new Intent();
 
             model.setAllDayTime(time);
-
-//            intent.putParcelableArrayListExtra(MainActivity.SELECT_ALL_APP_INFO, model);
 
             intent.putExtra(MainActivity.SELECT_ALL_APP_INFO, model);
 

@@ -98,7 +98,7 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
     public void addItem(int position, ApplicationInfo model) {
         mData.add(position, model);
         notifyItemInserted(position);
-//        notifyItemRangeChanged(0, mData.size());
+        notifyItemRangeChanged(0, mData.size());
     }
 
 
