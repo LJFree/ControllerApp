@@ -1,4 +1,4 @@
-﻿package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
+package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
 
 import android.app.Service;
 import android.content.Intent;
