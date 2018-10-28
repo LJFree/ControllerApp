@@ -76,13 +76,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         SharedPreferences preferences = getSharedPreferences(APP_LIST_SAVE, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
-        String controlPackages = "";
+        StringBuilder appListModelStrings = new StringBuilder();
 
         for (AppListModel controlApp : mAppList) {
-            controlPackages += controlApp.getName() + "," + controlApp.getPackageName() + "," + controlApp.getAllDayTime() + ";";
+            appListModelStrings.append(controlApp.toString());
         }
 
-        editor.putString(APP_LIST, controlPackages);
+        editor.putString(APP_LIST, appListModelStrings.toString());
         editor.apply();
 
     }
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         String controlPackages = preferences.getString(APP_LIST, null);
 
         if (controlPackages != null && controlPackages.trim().length() != 0) {
+
             String[] splitRow = controlPackages.split(";");
 
             for (String row : splitRow) {

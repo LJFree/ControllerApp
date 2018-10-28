@@ -125,11 +125,11 @@ public class AppListModel implements Parcelable {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("AppListModel{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", allDayTime='").append(allDayTime).append('\'');
-        sb.append(", packageName='").append(packageName).append('\'');
-        sb.append('}');
+        final StringBuffer sb = new StringBuffer();
+        sb.append(name);
+        sb.append(",").append(packageName);
+        sb.append(",").append(allDayTime);
+        sb.append(';');
         return sb.toString();
     }
 
