@@ -1,7 +1,11 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -67,14 +71,31 @@ public class CheckTimeAppController extends Service implements Runnable {
     @Override
     public void run() {
         try {
+            Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+            startActivity(launchIntent);
 
             while (isCheck) {
                 Thread.sleep(1000);
 
+
                 Log.e(TAG, "run: ");
                 if (mList != null) {
-                    Log.e(TAG, "run: " + mList.size());
+//                    ActivityManager mgr = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+//                    List<ActivityManager.RunningTaskInfo> tasks = mgr.getRunningTasks(1);
+
+
+//                    String currentApp = tasks.get(0).topActivity.getPackageName();
+
+
+                    String currentApp = getApplicationContext().getPackageName();
+
+                    Log.e(TAG, "run: " + currentApp);
+//                        PackageManager packageManager = getCon.getPackageManager();
+//                        ApplicationInfo applicationInfo = packageManager.getApplicationInfo(context.getPackageName(), 0);
+
                 }
+
+//                startActivity(launchIntent);
             }
 
         } catch (InterruptedException e) {

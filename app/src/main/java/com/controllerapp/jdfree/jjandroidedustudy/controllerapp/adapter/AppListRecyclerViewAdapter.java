@@ -1,11 +1,10 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter;
 
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,16 @@ import java.util.List;
 
 public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecyclerViewAdapter.ViewHolder> {
 
-    private List<ApplicationInfo> mData;
+    private List<ResolveInfo> mData;
     private PackageManager mPm;
 
     private ClickedListener onClickedListener;
 
-    public List<ApplicationInfo> getData() {
+    public List<ResolveInfo> getData() {
         return mData;
     }
 
-    public void setData(List<ApplicationInfo> mData) {
+    public void setData(List<ResolveInfo> mData) {
         this.mData = mData;
     }
 
@@ -40,7 +39,7 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
         this.onClickedListener = onClickedListener;
     }
 
-    public AppListRecyclerViewAdapter(List<ApplicationInfo> mData, PackageManager pm) {
+    public AppListRecyclerViewAdapter(List<ResolveInfo> mData, PackageManager pm) {
         this.mData = mData;
         this.mPm = pm;
     }
@@ -56,19 +55,28 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
-        ApplicationInfo appInfo = mData.get(i);
+        ResolveInfo appInfo = mData.get(i);
 
         Drawable icon = appInfo.loadIcon(mPm);
         String name = String.valueOf(appInfo.loadLabel(mPm));
-        String packageName = appInfo.packageName;
+
+        String packageName = appInfo.activityInfo.packageName;
 
         viewHolder.imageView.setImageDrawable(icon);
         viewHolder.textViewName.setText(name);
+        viewHolder.textDescription.setText(packageName);
 
         if (onClickedListener != null) {
             final AppListModel model = new AppListModel(name, packageName);
 
             viewHolder.textViewName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickedListener.onClicked(model);
+                }
+            });
+
+            viewHolder.textDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onClickedListener.onClicked(model);
@@ -95,7 +103,7 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
         notifyItemRangeChanged(0, mData.size());
     }
 
-    public void addItem(int position, ApplicationInfo model) {
+    public void addItem(int position, ResolveInfo model) {
         mData.add(position, model);
         notifyItemInserted(position);
         notifyItemRangeChanged(0, mData.size());
@@ -105,12 +113,14 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private TextView textViewName;
+        private TextView textDescription;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.app_list_image_view);
             textViewName = itemView.findViewById(R.id.app_list_app_name);
+            textDescription = itemView.findViewById(R.id.app_list_description);
         }
     }
 }

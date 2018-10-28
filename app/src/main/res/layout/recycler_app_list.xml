@@ -26,6 +26,7 @@
             tools:text="앱 이름" />
 
         <TextView
+            android:id="@+id/app_list_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

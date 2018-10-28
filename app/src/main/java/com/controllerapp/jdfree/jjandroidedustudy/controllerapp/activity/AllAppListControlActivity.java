@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +28,8 @@ import java.util.List;
 
 public class AllAppListControlActivity extends AppCompatActivity implements AppListRecyclerViewAdapter.ClickedListener {
 
-    private List<ApplicationInfo> mAppInfoList;
+    //    private List<ApplicationInfo> mAppInfoList;
+    private List<ResolveInfo> mAppInfoList;
     private AppListRecyclerViewAdapter mAdapter;
     private static final int REQUEST_CODE = 1001;
     private AppListModel model;
@@ -45,25 +47,41 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
 
         PackageManager pm = getPackageManager();
-        mAppInfoList = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        Intent intent1 = new Intent(Intent.ACTION_MAIN, null);
+        intent1.addCategory(Intent.CATEGORY_LAUNCHER);
 
+
+        mAppInfoList = pm.queryIntentActivities(intent1, 0);
 
         Intent intent = getIntent();
 
         List<AppListModel> nonDataList = intent.getParcelableArrayListExtra(MainActivity.NOT_APP_LIST);
 
         if (nonDataList.size() != 0) {
-            List<ApplicationInfo> tempList = mAppInfoList;
+            List<ResolveInfo> tempList = mAppInfoList;
 
             for (AppListModel nonData : nonDataList) {
                 for (int i = mAppInfoList.size() - 1; i >= 0; i--) {
-                    if (nonData.getPackageName().equals(mAppInfoList.get(i).packageName)) {
+                    if (nonData.getPackageName().equals(mAppInfoList.get(i).activityInfo.packageName)) {
+//                    if (nonData.getPackageName().equals(mAppInfoList.get(i).packageName)) {
                         tempList.remove(i);
                     }
                 }
             }
             mAppInfoList = tempList;
         }
+
+        /*  정렬
+        Collections.sort(mAppInfoList, new Comparator<ResolveInfo>() {
+            @Override
+            public int compare(ResolveInfo o1, ResolveInfo o2) {
+                String appName1 = String.valueOf(o1.loadLabel(getPackageManager()));
+                String appName2 = String.valueOf(o2.loadLabel(getPackageManager()));
+
+                return appName1.compareToIgnoreCase(appName2);
+            }
+        });
+        */
 
         mAdapter = new AppListRecyclerViewAdapter(mAppInfoList, pm);
 
@@ -103,18 +121,23 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
         TextView textView = findViewById(R.id.search_EditView);
         String textString = textView.getText().toString();
 
-        List<ApplicationInfo> searchList = new ArrayList<>();
-
         if (textString.trim().length() == 0) {
             textView.setText("");
             mAdapter.setData(mAppInfoList);
         } else {
 
-            for (ApplicationInfo applicationInfo : mAppInfoList) {
-                String name = String.valueOf(applicationInfo.loadLabel(getPackageManager()));
+            List<ResolveInfo> searchList = new ArrayList<>();
 
-                if (name.toLowerCase().trim().contains(textString.toLowerCase().trim())) {
-                    searchList.add(0, applicationInfo);
+            for (ResolveInfo resolveInfo : mAppInfoList) {
+                String appName = String.valueOf(resolveInfo.loadLabel(getPackageManager()));
+                String name = resolveInfo.activityInfo.name;
+                String packageName = resolveInfo.activityInfo.packageName;
+
+                if (appName.toLowerCase().trim().contains(textString.toLowerCase().trim())
+                        || name.toLowerCase().trim().contains(textString.toLowerCase().trim())
+                        || packageName.toLowerCase().trim().contains(textString.toLowerCase().trim())) {
+
+                    searchList.add(0, resolveInfo);
                 }
             }
 

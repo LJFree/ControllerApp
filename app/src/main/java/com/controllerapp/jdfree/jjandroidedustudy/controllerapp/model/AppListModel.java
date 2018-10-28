@@ -144,4 +144,5 @@ public class AppListModel implements Parcelable {
         dest.writeString(allDayTime);
         dest.writeString(packageName);
     }
+
 }
