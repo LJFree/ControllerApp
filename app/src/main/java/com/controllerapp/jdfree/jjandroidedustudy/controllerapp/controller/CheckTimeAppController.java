@@ -1,4 +1,4 @@
-package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
+﻿package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
 
 import android.app.Service;
 import android.content.Intent;
@@ -90,8 +90,22 @@ public class CheckTimeAppController extends Service implements Runnable {
 
         try {
             Runtime.getRuntime().exec("/system/bin/logcat -c");
+<<<<<<< HEAD
 
             process = Runtime.getRuntime().exec("/system/bin/logcat -b main -s ActivityManager:I");
+=======
+<<<<<<< HEAD
+
+            process = Runtime.getRuntime().exec("/system/bin/logcat -b main -s ActivityManager:I");
+
+
+=======
+
+            process = Runtime.getRuntime().exec("/system/bin/logcat -b main -s ActivityManager:I");
+
+
+>>>>>>> ff548d4d78312d9db7da7b2afe1ceb3f0c3a3cc0
+>>>>>>> 8d382062446056acbe96aa13b0515b41858413d0
         } catch (IOException e) {
 //            e.printStackTrace();
 
