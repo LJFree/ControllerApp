@@ -1,4 +1,4 @@
-﻿package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
+package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
 
 import android.app.Service;
 import android.content.Intent;
@@ -34,10 +34,11 @@ public class CheckTimeAppController extends Service implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        Log.e(TAG, "onStartCommand: ");
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
-
         }
+
         isCheck = true;
 
         mThread = new Thread(this);
@@ -45,7 +46,6 @@ public class CheckTimeAppController extends Service implements Runnable {
         mPlayer.setLooping(true);
         mPlayer.start();
         mThread.start();
-
 //        abc();
 
 
@@ -62,40 +62,6 @@ public class CheckTimeAppController extends Service implements Runnable {
 //        mThread.interrupt();
 //        mThread = null;
         super.onDestroy();
-    }
-
-    private void abc() {
-        try {
-
-            while (isCheck) {
-                Thread.sleep(1000);
-
-                Log.e(TAG, "run: ");
-                if (mList != null) {
-                }
-//                Intent intent = new Intent(this, MainActivity.class);
-//                startActivity(intent);
-
-                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.package.address");
-                startActivity(launchIntent);
-
-//                Intent i = new Intent();
-//                i.setAction(Intent.ACTION_MAIN);
-//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-//                        Intent.FLAG_ACTIVITY_CLEAR_TOP |
-//                        Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                i.addCategory(Intent.CATEGORY_HOME);
-//                startActivity(i);
-            }
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-//            isCheck = false;
-//            mThread.stop();
-//            mThread.destroy();
-//            this.stopSelf();
-        }
     }
 
     @Override
@@ -124,17 +90,8 @@ public class CheckTimeAppController extends Service implements Runnable {
 
         try {
             Runtime.getRuntime().exec("/system/bin/logcat -c");
-<<<<<<< HEAD
 
             process = Runtime.getRuntime().exec("/system/bin/logcat -b main -s ActivityManager:I");
-
-
-=======
-
-            process = Runtime.getRuntime().exec("/system/bin/logcat -b main -s ActivityManager:I");
-
-
->>>>>>> ff548d4d78312d9db7da7b2afe1ceb3f0c3a3cc0
         } catch (IOException e) {
 //            e.printStackTrace();
 
