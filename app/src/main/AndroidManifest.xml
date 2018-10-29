@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.controllerapp.jdfree.jjandroidedustudy.controllerapp">
+
+    <uses-permission xmlns:tools="http://schemas.android.com/tools"
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -31,7 +36,7 @@
             android:name=".activity.CheckTimeActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".controller.CheckTimeAppController" />
+        <service android:name=".controller.CheckTimeAppControllerService" />
     </application>
 
 </manifest>

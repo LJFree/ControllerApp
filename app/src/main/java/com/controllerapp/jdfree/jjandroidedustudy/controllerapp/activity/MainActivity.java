@@ -2,16 +2,19 @@ package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller.CheckTimeAppController;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller.CheckTimeAppControllerService;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.deleteitem.DeleteDialogFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.exit.ExitDialogFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.MainRecyclerViewAdapter;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mIntent = new Intent(this, CheckTimeAppController.class);
+        mIntent = new Intent(this, CheckTimeAppControllerService.class);
 
         mAppList = new ArrayList<>();
         loadList();
@@ -60,6 +63,15 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (mAppList.size() != 0) {
+            stopService(mIntent);
+
+            Intent intent = getPackageManager().getLaunchIntentForPackage(this.getPackageName());
+            startActivity(intent);
+
+            goService();
+        }
     }
 
     private void listSave() {
@@ -130,17 +142,27 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            AppListModel appModel = data.getParcelableExtra(SELECT_ALL_APP_INFO);
+
+            final Intent intent = data;
+            AppListModel appModel = intent.getParcelableExtra(SELECT_ALL_APP_INFO);
 
             mAdapter.addItem(0, appModel);
-
-            mIntent.putParcelableArrayListExtra(CHECK_CONTROLLER, (ArrayList<? extends Parcelable>) mAppList);
-
-            startService(mIntent);
+            goService();
 
             listSave();
-            Toast.makeText(this, "저장 완료", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void goService() {
+        mIntent.putParcelableArrayListExtra(CHECK_CONTROLLER, (ArrayList<? extends Parcelable>) mAppList);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(mIntent);
+        } else {
+            startService(mIntent);
+        }
+
     }
 
     @Override
@@ -153,6 +175,4 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         listSave();
         Toast.makeText(this, "앱 제어 삭제 완료", Toast.LENGTH_SHORT).show();
     }
-
-
 }

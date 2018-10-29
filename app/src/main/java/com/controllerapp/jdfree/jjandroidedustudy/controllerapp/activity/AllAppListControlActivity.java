@@ -57,19 +57,20 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
         List<AppListModel> nonDataList = intent.getParcelableArrayListExtra(MainActivity.NOT_APP_LIST);
 
-        if (nonDataList.size() != 0) {
-            List<ResolveInfo> tempList = mAppInfoList;
+        // 제어
+        nonDataList.add(new AppListModel("설정", "com.android.settings", ""));
 
-            for (AppListModel nonData : nonDataList) {
-                for (int i = mAppInfoList.size() - 1; i >= 0; i--) {
-                    if (nonData.getPackageName().equals(mAppInfoList.get(i).activityInfo.packageName)) {
+        List<ResolveInfo> tempList = mAppInfoList;
+
+        for (AppListModel nonData : nonDataList) {
+            for (int i = mAppInfoList.size() - 1; i >= 0; i--) {
+                if (nonData.getPackageName().equals(mAppInfoList.get(i).activityInfo.packageName)) {
 //                    if (nonData.getPackageName().equals(mAppInfoList.get(i).packageName)) {
-                        tempList.remove(i);
-                    }
+                    tempList.remove(i);
                 }
             }
-            mAppInfoList = tempList;
         }
+        mAppInfoList = tempList;
 
         /*  정렬
         Collections.sort(mAppInfoList, new Comparator<ResolveInfo>() {

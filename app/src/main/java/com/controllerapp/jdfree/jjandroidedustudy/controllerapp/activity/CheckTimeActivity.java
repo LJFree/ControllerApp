@@ -1,6 +1,7 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity;
 
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -66,7 +67,7 @@ public class CheckTimeActivity extends AppCompatActivity {
                 Toast.makeText(this, "제어 할 시간을 입력해야 합니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), 1);
             intent.putExtra(ALL_DAY_TIME, allDayTimeTextView.getText().toString());
 
         } else if (position == 1) {
