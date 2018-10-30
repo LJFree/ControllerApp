@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,7 +21,7 @@ public class CheckTimeActivity extends AppCompatActivity {
     private AllDayTimeCheckFragment mAllDayTimeCheckFragment;
     private NowToTimeCheckFragment mNowToTimeCheckFragment;
     private SelectTimeCheckFragment mSelectTimeCheckFragment;
-    public final static String ALL_DAY_TIME = "allDayTimeValue";
+    public final static String OVER_DAY_TIME = "overDayTimeValue";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +60,14 @@ public class CheckTimeActivity extends AppCompatActivity {
         Intent intent = new Intent();
 
         if (position == 0) {
-            EditText allDayTimeTextView = mAllDayTimeCheckFragment.getTimeTextView();
+            EditText overDayTimeTextView = mAllDayTimeCheckFragment.getTimeTextView();
 
-            if (allDayTimeTextView.getText().toString().length() == 0) {
+            if (overDayTimeTextView.getText().toString().length() == 0) {
                 Toast.makeText(this, "제어 할 시간을 입력해야 합니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
             startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), 1);
-            intent.putExtra(ALL_DAY_TIME, allDayTimeTextView.getText().toString());
+            intent.putExtra(OVER_DAY_TIME, overDayTimeTextView.getText().toString());
 
         } else if (position == 1) {
         } else if (position == 2) {

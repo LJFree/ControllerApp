@@ -1,9 +1,12 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     public MainRecyclerViewAdapter mAdapter;
     private Intent mIntent;
 
+    private CheckTimeAppControllerService mService;
+    private boolean mBound;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +67,104 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDataClicked(AppListModel model) {
 
-        if (mAppList.size() != 0) {
-            stopService(mIntent);
+    }
 
-            Intent intent = getPackageManager().getLaunchIntentForPackage(this.getPackageName());
-            startActivity(intent);
+    @Override
+    public void onAddClicked() {
+        Intent intent = new Intent(this, AllAppListControlActivity.class);
 
+        intent.putParcelableArrayListExtra(NOT_APP_LIST, (ArrayList<? extends Parcelable>) mAppList);
+
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    public void onLongClicked(int position) {
+        new DeleteDialogFragment().setDeleteListener(this, position).show(getSupportFragmentManager(), "delete");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+
+            final Intent intent = data;
+            AppListModel appModel = intent.getParcelableExtra(SELECT_ALL_APP_INFO);
+
+            mAdapter.addItem(0, appModel);
             goService();
+
+            listSave();
+            Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void deleteListener(int position) {
+        mAdapter.removeItem(position);
+
+        if (mAppList.size() == 0) {
+            unbindService(mConnection);
+            mBound = false;
+
+            stopService(mIntent);
+        } else {
+            goService();
+        }
+        listSave();
+        Toast.makeText(this, "앱 제어 삭제 완료", Toast.LENGTH_SHORT).show();
+    }
+
+    private void goService() {
+
+        stopService(mIntent);
+
+        mIntent.putParcelableArrayListExtra(CHECK_CONTROLLER, (ArrayList<? extends Parcelable>) mAppList);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(mIntent);
+        } else {
+            startService(mIntent);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, CheckTimeAppControllerService.class);
+        bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            CheckTimeAppControllerService.CheckTimeAppControlBinder binder = (CheckTimeAppControllerService.CheckTimeAppControlBinder) service;
+
+            mService = binder.getService();
+            mBound = true;
+
+            Toast.makeText(mService, "sadf", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // 예기치 않은 종료
+        }
+    };
+
 
     private void listSave() {
         SharedPreferences preferences = getSharedPreferences(APP_LIST_SAVE, MODE_PRIVATE);
@@ -103,9 +195,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
                 String name = splitCol[0];
                 String packageName = splitCol[1];
-                String time = splitCol[2];
 
-                AppListModel model = new AppListModel(name, packageName, time);
+                int time = Integer.parseInt(splitCol[3]);
+
+                AppListModel model = new AppListModel(name, packageName, time, time);
 
                 mAppList.add(model);
             }
@@ -113,66 +206,21 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+//        if (mAppList.size() != 0) {
+//            stopService(mIntent);
+
+//            Intent intent = getPackageManager().getLaunchIntentForPackage(this.getPackageName());
+//            startActivity(intent);
+
+//            goService();
+//        }
+    }
+
+    @Override
     public void onBackPressed() {
         new ExitDialogFragment().show(getSupportFragmentManager(), "exit");
-    }
-
-    @Override
-    public void onDataClicked(AppListModel model) {
-
-    }
-
-    @Override
-    public void onAddClicked() {
-        Intent intent = new Intent(this, AllAppListControlActivity.class);
-
-        intent.putParcelableArrayListExtra(NOT_APP_LIST, (ArrayList<? extends Parcelable>) mAppList);
-
-        startActivityForResult(intent, REQUEST_CODE);
-    }
-
-    @Override
-    public void onLongClicked(int position) {
-
-        new DeleteDialogFragment().setDeleteListener(this, position).show(getSupportFragmentManager(), "delete");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-
-            final Intent intent = data;
-            AppListModel appModel = intent.getParcelableExtra(SELECT_ALL_APP_INFO);
-
-            mAdapter.addItem(0, appModel);
-            goService();
-
-            listSave();
-            Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void goService() {
-        mIntent.putParcelableArrayListExtra(CHECK_CONTROLLER, (ArrayList<? extends Parcelable>) mAppList);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(mIntent);
-        } else {
-            startService(mIntent);
-        }
-
-    }
-
-    @Override
-    public void deleteListener(int position) {
-        mAdapter.removeItem(position);
-
-        if (mAppList.size() == 0) {
-            stopService(mIntent);
-        }
-        listSave();
-        Toast.makeText(this, "앱 제어 삭제 완료", Toast.LENGTH_SHORT).show();
     }
 }

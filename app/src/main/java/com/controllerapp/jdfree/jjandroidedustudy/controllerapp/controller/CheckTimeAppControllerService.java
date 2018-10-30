@@ -11,10 +11,12 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -46,6 +48,13 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
     int time = 0;
 
+    private IBinder mBinder = new CheckTimeAppControlBinder();
+
+    public class CheckTimeAppControlBinder extends Binder {
+        public CheckTimeAppControllerService getService() {
+            return CheckTimeAppControllerService.this;
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -56,7 +65,8 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     public int onStartCommand(Intent intent, int flags, int startId) {
 //        if ("startForeground".equals(intent.getAction())) {
         mNotification = new TimeInfoNotification(this);
-        mNotification.show();
+
+        startForeground(1, mNotification.getBuilder().build());
 
 //        } else if (mThread == null) {
         isCheck = true;
@@ -70,23 +80,25 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             mList = intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
         }
 //        }
+
         return RETURN_VALUE;
     }
 
     @Override
     public void onDestroy() {
-        RETURN_VALUE = START_NOT_STICKY;
+        if (mNotification != null) {
+            RETURN_VALUE = START_NOT_STICKY;
+            mNotification.hide();
 
-        mNotification.hide();
-
-        isCheck = false;
-        mPlayer.stop();
-        if (mThread != null) {
-            mThread.interrupt();
-            mThread = null;
+            isCheck = false;
+            mPlayer.stop();
+            if (mThread != null) {
+//                mThread.interrupt();
+                mThread = null;
+            }
+            this.stopSelf();
+            super.onDestroy();
         }
-        this.stopSelf();
-        super.onDestroy();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -117,7 +129,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                             for (AppListModel list : mList) {
 //                                Log.e(TAG, "all: " + packageName);
                                 if (packageName.equals(list.getPackageName())) {
-                                    time = Integer.parseInt(list.getAllDayTime());
+                                    time = list.getAllDayTime();
                                     startActivity(mainIntent);
 
                                     currentOk(list);
@@ -147,10 +159,14 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
     public void setCheck(boolean check) {
         isCheck = check;
+    }
+
+    public static List<AppListModel> getList() {
+        return mList;
     }
 }

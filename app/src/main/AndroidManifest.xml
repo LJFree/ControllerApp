@@ -36,7 +36,10 @@
             android:name=".activity.CheckTimeActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".controller.CheckTimeAppControllerService" />
+        <service
+            android:name=".controller.CheckTimeAppControllerService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -2,7 +2,6 @@ package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.Nullable;
@@ -22,13 +21,10 @@ import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.AppListR
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AllAppListControlActivity extends AppCompatActivity implements AppListRecyclerViewAdapter.ClickedListener {
 
-    //    private List<ApplicationInfo> mAppInfoList;
     private List<ResolveInfo> mAppInfoList;
     private AppListRecyclerViewAdapter mAdapter;
     private static final int REQUEST_CODE = 1001;
@@ -58,14 +54,13 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
         List<AppListModel> nonDataList = intent.getParcelableArrayListExtra(MainActivity.NOT_APP_LIST);
 
         // 제어
-        nonDataList.add(new AppListModel("설정", "com.android.settings", ""));
+        nonDataList.add(new AppListModel("설정", "com.android.settings"));
 
         List<ResolveInfo> tempList = mAppInfoList;
 
         for (AppListModel nonData : nonDataList) {
             for (int i = mAppInfoList.size() - 1; i >= 0; i--) {
                 if (nonData.getPackageName().equals(mAppInfoList.get(i).activityInfo.packageName)) {
-//                    if (nonData.getPackageName().equals(mAppInfoList.get(i).packageName)) {
                     tempList.remove(i);
                 }
             }
@@ -161,11 +156,12 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-            String time = data.getStringExtra(CheckTimeActivity.ALL_DAY_TIME);
+            int time = Integer.parseInt(data.getStringExtra(CheckTimeActivity.OVER_DAY_TIME));
 
             Intent intent = new Intent();
 
             model.setAllDayTime(time);
+            model.setOverDayTime(time);
 
             intent.putExtra(MainActivity.SELECT_ALL_APP_INFO, model);
 

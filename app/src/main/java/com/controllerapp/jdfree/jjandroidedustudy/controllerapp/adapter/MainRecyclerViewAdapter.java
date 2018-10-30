@@ -64,12 +64,13 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
             final int position = i;
 
             String name = data.getName();
-            String time = data.getAllDayTime();
+            int overTime = data.getOverDayTime();
+            int allTime = data.getAllDayTime();
 
             viewHolder.icon.setImageDrawable(data.getIcon(mPm));
 
             viewHolder.name.setText(name);
-            viewHolder.time.setText(time + "분");
+            viewHolder.time.setText(overTime + "/" + allTime + "분");
 
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
