@@ -22,6 +22,7 @@ import java.util.List;
 public class CheckTimeAppControllerService extends Service implements Runnable {
 
     public static final String CONTROL_APP_MODEL = "ControlAppModel";
+    public static final String TIME_OUT = "timeOut";
     private boolean isCheck;
     private List<AppListModel> mList;
     private MediaPlayer mPlayer;
@@ -35,7 +36,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     int time = 0;
 
     private IBinder mBinder = new CheckTimeAppControlBinder();
-    private Intent mControlIntent;
+    private Intent mAppControlActivityIntent;
     private String currentPackageName;
 
     public class CheckTimeAppControlBinder extends Binder {
@@ -95,7 +96,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     public void run() {
         try {
 //            Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
-            mControlIntent = new Intent(this, AppControlActivity.class);
+            mAppControlActivityIntent = new Intent(this, AppControlActivity.class);
 
             UsageEvents usageEvents;
             TimeCalculationThread timeCalculation = new TimeCalculationThread();
@@ -183,9 +184,11 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                                 if (!packageName.equals(currentPackageName)) {
                                     Log.e(TAG, "run: " + currentPackageName + "   " + packageName);
                                     AppListModel list = mList.get(i);
-                                    mControlIntent.putExtra(CONTROL_APP_MODEL, list);
+                                    mAppControlActivityIntent.putExtra(CONTROL_APP_MODEL, list);
                                     packageName = currentPackageName;
-                                    startActivity(mControlIntent);
+                                    mAppControlActivityIntent.putExtra(TIME_OUT, true);
+                                    mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                                    startActivity(mAppControlActivityIntent);
                                 }
                             } else {
 

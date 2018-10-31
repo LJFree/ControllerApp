@@ -4,16 +4,22 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.AppListRecyclerViewAdapter;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller.CheckTimeAppControllerService;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.timeselect.AllDayTimeCheckFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.timeselect.NowToTimeCheckFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.timeselect.SelectTimeCheckFragment;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 public class CheckTimeActivity extends AppCompatActivity {
 
@@ -27,6 +33,21 @@ public class CheckTimeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_time);
+
+        Intent intent = getIntent();
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_check_time);
+
+        AppListModel model = intent.getParcelableExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL);
+
+        String packageName = model.getPackageName();
+
+        AppListRecyclerViewAdapter adapter = new AppListRecyclerViewAdapter(packageName, getPackageManager());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+
 
         mSpinner = findViewById(R.id.select_time_spinner);
 

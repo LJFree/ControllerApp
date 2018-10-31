@@ -9,11 +9,13 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
     private CheckTimeAppControllerService mService;
     private boolean mBound;
+    private Fragment statsFragment;
 
 
     @Override
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        statsFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_stats);
+        statsFragment.setMenuVisibility(false);
         mIntent = new Intent(this, CheckTimeAppControllerService.class);
 
         mAppList = new ArrayList<>();

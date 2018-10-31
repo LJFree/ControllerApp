@@ -46,4 +46,12 @@ public class AppControlActivity extends AppCompatActivity {
             textView.setText(appName + " 사용 시간 완료 " + time + "분");
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        startActivity(intent);
+    }
 }

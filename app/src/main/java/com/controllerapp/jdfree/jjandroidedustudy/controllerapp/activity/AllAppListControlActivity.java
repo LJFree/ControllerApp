@@ -2,6 +2,7 @@ package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.AppListRecyclerViewAdapter;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller.CheckTimeAppControllerService;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.ArrayList;
@@ -112,7 +114,7 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
         this.model = model;
 
         Intent intent = new Intent(this, CheckTimeActivity.class);
-
+        intent.putExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL, model);
         startActivityForResult(intent, REQUEST_CODE);
     }
 

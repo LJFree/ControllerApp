@@ -38,6 +38,8 @@ public class TimeInfoNotification {
         // 액션 정의
 //        Intent intent = new Intent(this, MainActivity.class);
         Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // 클릭 이벤트 설정
