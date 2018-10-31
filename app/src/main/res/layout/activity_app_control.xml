@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.AppControlActivity">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_app_control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/text_control_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="하루 사용 시간 완료 되었습니다." />
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecyclerViewAdapter.ViewHolder> {
@@ -39,8 +41,26 @@ public class AppListRecyclerViewAdapter extends RecyclerView.Adapter<AppListRecy
         this.onClickedListener = onClickedListener;
     }
 
-    public AppListRecyclerViewAdapter(List<ResolveInfo> mData, PackageManager pm) {
-        this.mData = mData;
+    public AppListRecyclerViewAdapter(List<ResolveInfo> data, PackageManager pm) {
+        this.mData = data;
+        this.mPm = pm;
+    }
+
+    public AppListRecyclerViewAdapter(String packageName, PackageManager pm) {
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> appInfoList = pm.queryIntentActivities(intent, 0);
+
+        List<ResolveInfo> list = new ArrayList<>();
+
+        for (ResolveInfo info : appInfoList) {
+            if (info.activityInfo.packageName.equals(packageName)) {
+                list.add(info);
+                break;
+            }
+        }
+
+        this.mData = list;
         this.mPm = pm;
     }
 

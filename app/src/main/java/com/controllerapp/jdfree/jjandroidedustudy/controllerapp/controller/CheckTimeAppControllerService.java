@@ -13,6 +13,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.AppControlActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class CheckTimeAppControllerService extends Service implements Runnable {
 
+    public static final String CONTROL_APP_MODEL = "ControlAppModel";
     private boolean isCheck;
     private List<AppListModel> mList;
     private MediaPlayer mPlayer;
@@ -33,6 +35,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     int time = 0;
 
     private IBinder mBinder = new CheckTimeAppControlBinder();
+    private Intent mControlIntent;
 
     public class CheckTimeAppControlBinder extends Binder {
         public CheckTimeAppControllerService getService() {
@@ -90,11 +93,10 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     public void run() {
         try {
 //            Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
-            Intent mainIntent = new Intent(this, MainActivity.class);
-            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mControlIntent = new Intent(this, AppControlActivity.class);
 
             UsageEvents usageEvents;
-            TimeCalculationThread timeCalculation = new TimeCalculationThread("");
+            TimeCalculationThread timeCalculation = new TimeCalculationThread();
             timeCalculation.setDaemon(true);
 
             while (isCheck) {
@@ -110,6 +112,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                     UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
                     usageEvents = usageStatsManager.queryEvents(beginTime, endTime);
 
+
                     while (usageEvents.hasNextEvent()) {
                         UsageEvents.Event event = new UsageEvents.Event();
                         usageEvents.getNextEvent(event);
@@ -119,7 +122,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
                             timeCalculation.setPackageName(packageName);
 
-                            if (!timeCalculation.isTime) {
+                            if (!timeCalculation.isTime()) {
                                 timeCalculation.setTime(true);
                                 timeCalculation.start();
                             }
@@ -170,27 +173,31 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         @Override
         public void run() {
             try {
+
                 while (isTime) {
                     for (int i = 0; i < mList.size(); i++) {
+
                         if (packageName.equals(mList.get(i).getPackageName())) {
-                            time = mList.get(i).getAllDayTime();
-
                             int timeSecond = mList.get(i).getStartDayTime() + 1;
-                            int minuteSecond = mList.get(i).getOverDayTime();
+                            int minute = mList.get(i).getOverDayTime();
 
-                            if (timeSecond % 60 == 0) {
-                                minuteSecond--;
+                            if (minute == 0) {
+                                if (!packageName.equals(getApplicationContext().getPackageName())) {
+                                    AppListModel list = mList.get(i);
+                                    mControlIntent.putExtra(CONTROL_APP_MODEL, list);
+                                    startActivity(mControlIntent);
+                                }
+                            } else {
+
+                                if (timeSecond % 60 == 0) {
+                                    minute--;
+                                    mList.get(i).setOverDayTime(minute);
+                                }
+
+                                mList.get(i).setStartDayTime(timeSecond);
                             }
-
-                            mList.get(i).setStartDayTime(timeSecond);
-                            mList.get(i).setOverDayTime(minuteSecond);
-
-                            Log.e(TAG, "run: start" + mList.get(i).getStartDayTime() +
-                                    "overTime" + mList.get(i).getOverDayTime() + "  " + mList.get(i).getPackageName());
-
-//                                    startActivity(mainIntent);
+                            break;
                         }
-
                     }
 
                     Thread.sleep(1000);

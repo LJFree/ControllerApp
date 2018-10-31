@@ -162,7 +162,8 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     public void changeItem(List<AppListModel> list) {
         mData = list;
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+        notifyItemRangeChanged(0, mData.size());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

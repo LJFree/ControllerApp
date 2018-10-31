@@ -41,7 +41,9 @@
         <service
             android:name=".controller.CheckTimeAppControllerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".activity.AppControlActivity"></activity>
     </application>
 
 </manifest>
