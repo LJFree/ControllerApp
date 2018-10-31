@@ -36,6 +36,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
     private IBinder mBinder = new CheckTimeAppControlBinder();
     private Intent mControlIntent;
+    private String currentPackageName;
 
     public class CheckTimeAppControlBinder extends Binder {
         public CheckTimeAppControllerService getService() {
@@ -65,6 +66,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         mPlayer.start();
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
+            currentPackageName = getApplicationContext().getPackageName();
         }
 //        }
 
@@ -166,10 +168,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
         }
 
-        private TimeCalculationThread(String packageName) {
-            this.packageName = packageName;
-        }
-
         @Override
         public void run() {
             try {
@@ -182,9 +180,11 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                             int minute = mList.get(i).getOverDayTime();
 
                             if (minute == 0) {
-                                if (!packageName.equals(getApplicationContext().getPackageName())) {
+                                if (!packageName.equals(currentPackageName)) {
+                                    Log.e(TAG, "run: " + currentPackageName + "   " + packageName);
                                     AppListModel list = mList.get(i);
                                     mControlIntent.putExtra(CONTROL_APP_MODEL, list);
+                                    packageName = currentPackageName;
                                     startActivity(mControlIntent);
                                 }
                             } else {
