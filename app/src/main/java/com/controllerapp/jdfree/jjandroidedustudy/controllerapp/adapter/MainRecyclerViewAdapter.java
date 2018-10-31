@@ -3,13 +3,16 @@ package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.List;
@@ -155,6 +158,11 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
         mData.add(position, model);
         notifyItemInserted(position);
         notifyItemRangeChanged(0, mData.size());
+    }
+
+    public void changeItem(List<AppListModel> list) {
+        mData = list;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

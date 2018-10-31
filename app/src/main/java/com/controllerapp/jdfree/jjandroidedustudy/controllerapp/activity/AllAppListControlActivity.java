@@ -53,6 +53,9 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
         List<AppListModel> nonDataList = intent.getParcelableArrayListExtra(MainActivity.NOT_APP_LIST);
 
+        if (nonDataList == null) {
+            nonDataList = new ArrayList<>();
+        }
         // 제어
         nonDataList.add(new AppListModel("설정", "com.android.settings"));
 
@@ -162,6 +165,7 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
             model.setAllDayTime(time);
             model.setOverDayTime(time);
+            model.setStartDayTime(0);
 
             intent.putExtra(MainActivity.SELECT_ALL_APP_INFO, model);
 

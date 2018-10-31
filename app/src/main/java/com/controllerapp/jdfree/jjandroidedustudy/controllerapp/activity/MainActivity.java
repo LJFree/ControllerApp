@@ -142,10 +142,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     protected void onStop() {
         super.onStop();
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
+//        if (mBound) {
+//            unbindService(mConnection);
+//            mBound = false;
+//        }
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -156,7 +156,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
             mService = binder.getService();
             mBound = true;
 
-            Toast.makeText(mService, "sadf", Toast.LENGTH_SHORT).show();
+            if (mService.getList() != null) {
+                mAppList = mService.getList();
+                mAdapter.changeItem(mAppList);
+            }
         }
 
         @Override

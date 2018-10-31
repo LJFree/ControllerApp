@@ -13,22 +13,11 @@ public class AppListModel implements Parcelable {
     private String packageName;
     private int allDayTime;
     private int overDayTime;
+    private int startDayTime;
 
     //////////////////////////////////////////////////////////////////////////////////////////
     public AppListModel() {
     }
-
-    public static final Creator<AppListModel> CREATOR = new Creator<AppListModel>() {
-        @Override
-        public AppListModel createFromParcel(Parcel in) {
-            return new AppListModel(in);
-        }
-
-        @Override
-        public AppListModel[] newArray(int size) {
-            return new AppListModel[size];
-        }
-    };
 
     public ApplicationInfo getAppInfo(PackageManager pm) {
         try {
@@ -79,12 +68,33 @@ public class AppListModel implements Parcelable {
         this.overDayTime = overDayTime;
     }
 
+    public AppListModel(String name, String packageName, int allDayTime, int overDayTime, int startDayTime) {
+        this.name = name;
+        this.packageName = packageName;
+        this.allDayTime = allDayTime;
+        this.overDayTime = overDayTime;
+        this.startDayTime = startDayTime;
+    }
+
     protected AppListModel(Parcel in) {
         name = in.readString();
         packageName = in.readString();
         allDayTime = in.readInt();
         overDayTime = in.readInt();
+        startDayTime = in.readInt();
     }
+
+    public static final Creator<AppListModel> CREATOR = new Creator<AppListModel>() {
+        @Override
+        public AppListModel createFromParcel(Parcel in) {
+            return new AppListModel(in);
+        }
+
+        @Override
+        public AppListModel[] newArray(int size) {
+            return new AppListModel[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -118,6 +128,14 @@ public class AppListModel implements Parcelable {
         this.overDayTime = overDayTime;
     }
 
+    public int getStartDayTime() {
+        return startDayTime;
+    }
+
+    public void setStartDayTime(int startDayTime) {
+        this.startDayTime = startDayTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -127,6 +145,7 @@ public class AppListModel implements Parcelable {
 
         if (allDayTime != model.allDayTime) return false;
         if (overDayTime != model.overDayTime) return false;
+        if (startDayTime != model.startDayTime) return false;
         if (name != null ? !name.equals(model.name) : model.name != null) return false;
         return packageName != null ? packageName.equals(model.packageName) : model.packageName == null;
     }
@@ -137,6 +156,7 @@ public class AppListModel implements Parcelable {
         result = 31 * result + (packageName != null ? packageName.hashCode() : 0);
         result = 31 * result + allDayTime;
         result = 31 * result + overDayTime;
+        result = 31 * result + startDayTime;
         return result;
     }
 
@@ -146,7 +166,8 @@ public class AppListModel implements Parcelable {
         sb.append(name).append(',');
         sb.append(packageName).append(',');
         sb.append(allDayTime).append(',');
-        sb.append(overDayTime);
+        sb.append(overDayTime).append(',');
+        sb.append(startDayTime);
         sb.append(';');
         return sb.toString();
     }
@@ -162,5 +183,6 @@ public class AppListModel implements Parcelable {
         dest.writeString(packageName);
         dest.writeInt(allDayTime);
         dest.writeInt(overDayTime);
+        dest.writeInt(startDayTime);
     }
 }

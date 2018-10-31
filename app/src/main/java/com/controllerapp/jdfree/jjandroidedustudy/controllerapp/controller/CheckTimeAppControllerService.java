@@ -1,43 +1,27 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Service;
 import android.app.usage.UsageEvents;
-import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 public class CheckTimeAppControllerService extends Service implements Runnable {
 
     private boolean isCheck;
-    private static List<AppListModel> mList;
+    private List<AppListModel> mList;
     private MediaPlayer mPlayer;
     private Thread mThread;
     public static final String TAG = "abcasdf";
@@ -109,37 +93,40 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             Intent mainIntent = new Intent(this, MainActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+            UsageEvents usageEvents;
+            TimeCalculationThread timeCalculation = new TimeCalculationThread("");
+            timeCalculation.setDaemon(true);
+
             while (isCheck) {
                 Thread.sleep(1000);
 
                 if (mList != null) {
 
-                    String packageName = null;
+                    String packageName;
+
+                    long endTime = System.currentTimeMillis();
+                    long beginTime = endTime - 1000;
+
                     UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-                    final long endTime = System.currentTimeMillis();
-                    final long beginTime = endTime - 1000;
-                    final UsageEvents usageEvents = usageStatsManager.queryEvents(beginTime, endTime);
+                    usageEvents = usageStatsManager.queryEvents(beginTime, endTime);
 
                     while (usageEvents.hasNextEvent()) {
                         UsageEvents.Event event = new UsageEvents.Event();
                         usageEvents.getNextEvent(event);
+
                         if (event.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
                             packageName = event.getPackageName();
 
-                            for (AppListModel list : mList) {
-//                                Log.e(TAG, "all: " + packageName);
-                                if (packageName.equals(list.getPackageName())) {
-                                    time = list.getAllDayTime();
-                                    startActivity(mainIntent);
+                            timeCalculation.setPackageName(packageName);
 
-                                    currentOk(list);
-                                }
+                            if (!timeCalculation.isTime) {
+                                timeCalculation.setTime(true);
+                                timeCalculation.start();
                             }
                         }
                     }
                 }
             }
-
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -150,11 +137,69 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         }
     }
 
-    private void currentOk(AppListModel model) {
 
-        time--;
+    private class TimeCalculationThread extends Thread {
 
-        Log.e(TAG, "currentOk: " + time + model.getPackageName());
+        private boolean isTime = false;
+        private String packageName;
+
+        public boolean isTime() {
+            return isTime;
+        }
+
+        public void setTime(boolean time) {
+            isTime = time;
+        }
+
+        public String getPackageName() {
+            return packageName;
+        }
+
+        public void setPackageName(String packageName) {
+            this.packageName = packageName;
+        }
+
+        private TimeCalculationThread() {
+
+        }
+
+        private TimeCalculationThread(String packageName) {
+            this.packageName = packageName;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (isTime) {
+                    for (int i = 0; i < mList.size(); i++) {
+                        if (packageName.equals(mList.get(i).getPackageName())) {
+                            time = mList.get(i).getAllDayTime();
+
+                            int timeSecond = mList.get(i).getStartDayTime() + 1;
+                            int minuteSecond = mList.get(i).getOverDayTime();
+
+                            if (timeSecond % 60 == 0) {
+                                minuteSecond--;
+                            }
+
+                            mList.get(i).setStartDayTime(timeSecond);
+                            mList.get(i).setOverDayTime(minuteSecond);
+
+                            Log.e(TAG, "run: start" + mList.get(i).getStartDayTime() +
+                                    "overTime" + mList.get(i).getOverDayTime() + "  " + mList.get(i).getPackageName());
+
+//                                    startActivity(mainIntent);
+                        }
+
+                    }
+
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+            } finally {
+                isTime = false;
+            }
+        }
     }
 
     @Override
@@ -166,7 +211,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         isCheck = check;
     }
 
-    public static List<AppListModel> getList() {
+    public List<AppListModel> getList() {
         return mList;
     }
 }
