@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         RecyclerView recyclerView = findViewById(R.id.app_list_recycler_view);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 5);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
         mAdapter = new MainRecyclerViewAdapter(mAppList, getPackageManager());
 
 
@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         Intent intent = new Intent(this, CheckTimeAppControllerService.class);
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+        listSave();
+
     }
 
     @Override
@@ -165,8 +167,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
                 mAppList = mService.getList();
                 mAdapter.changeItem(mAppList);
             }
-
-            Toast.makeText(mService, "asdf", Toast.LENGTH_SHORT).show();
         }
 
         @Override

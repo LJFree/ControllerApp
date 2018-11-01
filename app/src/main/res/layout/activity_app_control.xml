@@ -3,19 +3,110 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     tools:context=".activity.AppControlActivity">
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_app_control"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="128dp"
+        android:layout_marginTop="128dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_view_app_control_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/app_plus" />
+
+        <TextView
+            android:id="@+id/text_view_app_control_item"
+            android:layout_width="256dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            tools:text="어 플 명" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/text_control_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="하루 사용 시간 완료 되었습니다." />
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="은(는) 제한 시간 초과 어플입니다."
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="64dp"
+        android:gravity="center"
+        android:text="00시 이후 자동 초기화 됩니다."
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="남은 시간"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="72dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:gravity="center"
+            android:text="00"
+            android:textColor="@color/colorRed"
+            android:textSize="64sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:text=":"
+            android:textColor="@color/colorBlack"
+            android:textSize="64sp" />
+
+        <TextView
+            android:layout_width="72dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:gravity="center"
+            android:text="00"
+            android:textColor="@color/colorRed"
+            android:textSize="64sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:text=":"
+            android:textColor="@color/colorBlack"
+            android:textSize="64sp" />
+
+        <TextView
+            android:layout_width="72dp"
+            android:layout_height="80dp"
+            android:background="@color/colorWhite"
+            android:gravity="center"
+            android:text="00"
+            android:textColor="@color/colorRed"
+            android:textSize="64sp" />
+
+
+    </LinearLayout>
 </LinearLayout>

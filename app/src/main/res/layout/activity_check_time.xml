@@ -1,37 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     tools:context=".activity.CheckTimeActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_check_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="기간 선택" />
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <Spinner
-        android:id="@+id/select_time_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/select_time_check"
-        android:tooltipText="기간을 선택하세요." />
+        <ImageView
+            android:id="@+id/image_view_check_time_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/app_plus" />
 
-    <fragment
-        android:id="@+id/check_time_fragment"
-        android:name="com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.timeselect.AllDayTimeCheckFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/text_view_check_item"
+            android:layout_width="256dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            tools:text="어 플 명" />
 
-    <Button
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="save_button"
-        android:text="저장" />
+        android:layout_height="96dp"
+        android:background="@color/colorSkyBlue1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="기간 선택"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <Spinner
+            android:id="@+id/select_time_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="64dp"
+            android:entries="@array/select_time_check"
+            android:tooltipText="기간을 선택하세요." />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorSkyBlue2"
+        android:orientation="vertical">
+
+        <fragment
+            android:id="@+id/check_time_fragment"
+            android:name="com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.timeselect.AllDayTimeCheckFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_alignParentTop="true" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:onClick="save_button"
+            android:text="저장"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+    </RelativeLayout>
 </LinearLayout>

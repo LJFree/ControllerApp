@@ -2,7 +2,7 @@
 <resources>
     <string-array name="select_time_check">
         <item>하루 중</item>
-        <item>지금 부터</item>
-        <item>원하는 시간</item>
+        <item>지금 부터(미지원)</item>
+        <item>원하는 시간(미지원)</item>
     </string-array>
 </resources>

@@ -7,11 +7,10 @@
     tools:context=".fragment.timeselect.SelectTimeCheckFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <EditText
-        android:id="@+id/select_edit_view"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:hint="제어할 시간" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="지원 되지 않는 페이지입니다." />
 
 </FrameLayout>

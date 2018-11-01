@@ -1,6 +1,7 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,18 +38,17 @@ public class CheckTimeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_check_time);
+        ImageView imageViewIcon = findViewById(R.id.image_view_check_time_icon);
+        TextView textViewAppName = findViewById(R.id.text_view_check_item);
+
 
         AppListModel model = intent.getParcelableExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL);
 
-        String packageName = model.getPackageName();
+        Drawable icon = model.getIcon(getPackageManager());
+        String packageName = model.getName();
 
-        AppListRecyclerViewAdapter adapter = new AppListRecyclerViewAdapter(packageName, getPackageManager());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(layoutManager);
-
+        imageViewIcon.setImageDrawable(icon);
+        textViewAppName.setText(packageName);
 
         mSpinner = findViewById(R.id.select_time_spinner);
 
@@ -90,11 +91,13 @@ public class CheckTimeActivity extends AppCompatActivity {
             startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), 1);
             intent.putExtra(OVER_DAY_TIME, overDayTimeTextView.getText().toString());
 
+            setResult(RESULT_OK, intent);
+            finish();
         } else if (position == 1) {
+            Toast.makeText(this, "미지원", Toast.LENGTH_SHORT).show();
         } else if (position == 2) {
+            Toast.makeText(this, "미지원", Toast.LENGTH_SHORT).show();
         }
 
-        setResult(RESULT_OK, intent);
-        finish();
     }
 }
