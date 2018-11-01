@@ -1,6 +1,7 @@
 package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter;
 
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,7 +26,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     private PackageManager mPm;
 
     public interface onClicked {
-        void onDataClicked(AppListModel model);
+        void onDataClicked(AppListModel model, Drawable icon);
 
         void onAddClicked();
 
@@ -66,11 +67,13 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
             final AppListModel data = mData.get(i);
             final int position = i;
 
+            final Drawable icon = data.getIcon(mPm);
+
             String name = data.getName();
             int overTime = data.getOverDayTime();
             int allTime = data.getAllDayTime();
 
-            viewHolder.icon.setImageDrawable(data.getIcon(mPm));
+            viewHolder.icon.setImageDrawable(icon);
 
             viewHolder.name.setText(name);
             viewHolder.time.setText(overTime + "/" + allTime + "분");
@@ -78,19 +81,19 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onDataClicked(data);
+                    clicked.onDataClicked(data, icon);
                 }
             });
             viewHolder.name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onDataClicked(data);
+                    clicked.onDataClicked(data, icon);
                 }
             });
             viewHolder.time.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onDataClicked(data);
+                    clicked.onDataClicked(data, icon);
                 }
             });
 

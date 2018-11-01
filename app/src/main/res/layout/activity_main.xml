@@ -3,20 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="@color/colorBackground"
     tools:context=".activity.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/app_list_recycler_view"
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/recycler_icon_list" />
+        android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/fragment_main_stats"
-        android:name="com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.StatsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/app_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/recycler_icon_list" />
+
+            <LinearLayout
+                android:id="@+id/liner_layout_fragment_main_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <fragment
+                    android:id="@+id/fragment_main_stats"
+                    android:name="com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.StatsFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </LinearLayout>

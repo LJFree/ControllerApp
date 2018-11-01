@@ -4,7 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -14,12 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller.CheckTimeAppControllerService;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.StatsFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.deleteitem.DeleteDialogFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.exit.ExitDialogFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.MainRecyclerViewAdapter;
@@ -43,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
     private CheckTimeAppControllerService mService;
     private boolean mBound;
-    private Fragment statsFragment;
+    private LinearLayout mLinearLayoutFragmentStats;
+    private StatsFragment mFragmentStats;
 
 
     @Override
@@ -51,8 +56,11 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        statsFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_stats);
-        statsFragment.setMenuVisibility(false);
+        mLinearLayoutFragmentStats = findViewById(R.id.liner_layout_fragment_main_stats);
+        mLinearLayoutFragmentStats.setFocusableInTouchMode(true);
+
+        mFragmentStats = (StatsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main_stats);
+
         mIntent = new Intent(this, CheckTimeAppControllerService.class);
 
         mAppList = new ArrayList<>();
@@ -72,8 +80,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     }
 
     @Override
-    public void onDataClicked(AppListModel model) {
+    public void onDataClicked(AppListModel model, Drawable icon) {
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
+        mFragmentStats.setModel(model, icon);
+
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.VISIBLE);
+        mLinearLayoutFragmentStats.requestFocus();
     }
 
     @Override
@@ -87,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
     @Override
     public void onLongClicked(int position) {
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
+
         new DeleteDialogFragment().setDeleteListener(this, position).show(getSupportFragmentManager(), "delete");
     }
 
@@ -139,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     protected void onStart() {
         super.onStart();
+
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
         Intent intent = new Intent(this, CheckTimeAppControllerService.class);
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);

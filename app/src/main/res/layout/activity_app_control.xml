@@ -106,7 +106,5 @@
             android:text="00"
             android:textColor="@color/colorRed"
             android:textSize="64sp" />
-
-
     </LinearLayout>
 </LinearLayout>
