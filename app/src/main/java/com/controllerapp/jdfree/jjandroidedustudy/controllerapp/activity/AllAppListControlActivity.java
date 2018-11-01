@@ -161,7 +161,7 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-            int time = Integer.parseInt(data.getStringExtra(CheckTimeActivity.OVER_DAY_TIME));
+            int time = data.getIntExtra(CheckTimeActivity.OVER_DAY_TIME, 0);
 
             Intent intent = new Intent();
 

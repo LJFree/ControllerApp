@@ -43,7 +43,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activity.AppControlActivity"></activity>
+        <activity android:name=".activity.AppControlActivity" />
+        <activity android:name=".activity.AppStatsUpdateActivity"></activity>
     </application>
 
 </manifest>

@@ -53,8 +53,8 @@ public class TimeInfoNotification {
         builder.setColor(Color.RED);
 
         // 기본 알림음 사운드 설정
-        Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-        builder.setSound(ringtoneUri);
+//        Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+//        builder.setSound(ringtoneUri);
 
         // 진동설정: 대기시간, 진동시간, 대기시간, 진동시간 ... 반복 패턴
         long[] vibrate = {0, 100, 200, 300};

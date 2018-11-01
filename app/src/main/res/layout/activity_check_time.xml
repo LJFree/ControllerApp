@@ -43,18 +43,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="기간 선택"
+            android:text="기간"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-        <Spinner
-            android:id="@+id/select_time_spinner"
+        <TextView
+            android:id="@+id/text_view_time_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="64dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="64dp"
-            android:entries="@array/select_time_check"
-            android:tooltipText="기간을 선택하세요." />
+            android:gravity="center"
+            android:text="하루 중 사용 시간 선택"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
     </LinearLayout>
 
 
@@ -64,13 +65,19 @@
         android:background="@color/colorSkyBlue2"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/check_time_fragment"
-            android:name="com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.timeselect.AllDayTimeCheckFragment"
+
+        <TimePicker
+            android:id="@+id/time_picker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="16dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:timePickerMode="spinner" />
+
 
         <Button
             style="@style/Widget.AppCompat.Button.Colored"
