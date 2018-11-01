@@ -17,11 +17,10 @@ public class DeleteDialogFragment extends DialogFragment {
     private onDeleteListener mDeleteListener;
 
     public interface onDeleteListener {
-        void deleteListener(int position);
+        void deleteListener();
     }
 
-    public DeleteDialogFragment setDeleteListener(onDeleteListener mDeleteListener, int position) {
-        this.position = position;
+    public DeleteDialogFragment setDeleteListener(onDeleteListener mDeleteListener) {
         this.mDeleteListener = mDeleteListener;
 
         return this;
@@ -37,7 +36,7 @@ public class DeleteDialogFragment extends DialogFragment {
                 .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mDeleteListener.deleteListener(position);
+                        mDeleteListener.deleteListener();
                     }
                 })
                 .setNegativeButton("취소", null);

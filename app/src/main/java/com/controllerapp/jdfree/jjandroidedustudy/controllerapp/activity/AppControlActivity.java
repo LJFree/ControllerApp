@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
@@ -29,19 +31,18 @@ public class AppControlActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if (intent != null) {
-            ImageView imageView = findViewById(R.id.image_view_app_control_icon);
-            TextView textView = findViewById(R.id.text_view_app_control_item);
+        ImageView imageView = findViewById(R.id.image_view_app_control_icon);
+        TextView textView = findViewById(R.id.text_view_app_control_item);
 
-            AppListModel model = intent.getParcelableExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL);
+        AppListModel model = intent.getParcelableExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL);
 
-            Drawable appIcon = model.getIcon(getPackageManager());
-            String appName = model.getName();
+        Drawable appIcon = model.getIcon(getPackageManager());
+        String appName = model.getName();
 
 
-            imageView.setImageDrawable(appIcon);
-            textView.setText(appName);
-        }
+        imageView.setImageDrawable(appIcon);
+        textView.setText(appName);
+
     }
 
     @Override
@@ -50,5 +51,7 @@ public class AppControlActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         startActivity(intent);
+        finish();
     }
+
 }

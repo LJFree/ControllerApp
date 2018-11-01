@@ -50,12 +50,12 @@ public class StatsFragment extends Fragment {
         DecimalFormat format = new DecimalFormat("00");
 
         String appName = model.getName();
-        Drawable iicon = icon;
+
         int allTime = model.getAllDayTime() * 60;
         int sTime = model.getStartDayTime();
         int nTime = allTime - sTime;
 
-        mImageView.setImageDrawable(iicon);
+        mImageView.setImageDrawable(icon);
         mAppNameTextView.setText(appName);
 
         int nH = nTime / 3600;

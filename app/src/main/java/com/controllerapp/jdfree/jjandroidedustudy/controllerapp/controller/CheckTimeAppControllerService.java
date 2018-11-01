@@ -17,6 +17,7 @@ import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.AppCont
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class CheckTimeAppControllerService extends Service implements Runnable {
@@ -39,6 +40,9 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     private Intent mAppControlActivityIntent;
     private String currentPackageName;
 
+    private int date;
+
+
     public class CheckTimeAppControlBinder extends Binder {
         public CheckTimeAppControllerService getService() {
             return CheckTimeAppControllerService.this;
@@ -53,6 +57,9 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 //        if ("startForeground".equals(intent.getAction())) {
+
+        date = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
         mNotification = new TimeInfoNotification(this);
 
         startForeground(1, mNotification.getBuilder().build());
@@ -64,7 +71,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         mThread.start();
         mPlayer = MediaPlayer.create(this, R.raw.song);
         mPlayer.setLooping(true);
-        mPlayer.start();
+//        mPlayer.start();
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
             currentPackageName = getApplicationContext().getPackageName();
@@ -105,6 +112,8 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             while (isCheck) {
                 Thread.sleep(1000);
 
+                initData();
+
                 if (mList != null) {
 
                     String packageName;
@@ -143,6 +152,20 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         }
     }
 
+    private void initData() {
+
+        for (int i = 0; i < mList.size(); i++) {
+            if (date != Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+                AppListModel model = mList.get(i);
+
+                model.setStartDayTime(0);
+                model.setOverDayTime(model.getAllDayTime());
+
+                mList.set(i, model);
+            }
+        }
+    }
+
 
     private class TimeCalculationThread extends Thread {
 
@@ -166,7 +189,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         }
 
         private TimeCalculationThread() {
-
         }
 
         @Override
@@ -182,10 +204,10 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
                             if (minute == 0) {
                                 if (!packageName.equals(currentPackageName)) {
-                                    Log.e(TAG, "run: " + currentPackageName + "   " + packageName);
                                     AppListModel list = mList.get(i);
-                                    mAppControlActivityIntent.putExtra(CONTROL_APP_MODEL, list);
                                     packageName = currentPackageName;
+
+                                    mAppControlActivityIntent.putExtra(CONTROL_APP_MODEL, list);
                                     mAppControlActivityIntent.putExtra(TIME_OUT, true);
                                     mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                                     startActivity(mAppControlActivityIntent);

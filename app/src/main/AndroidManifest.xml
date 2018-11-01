@@ -44,7 +44,9 @@
             android:exported="true" />
 
         <activity android:name=".activity.AppControlActivity" />
-        <activity android:name=".activity.AppStatsUpdateActivity"></activity>
+        <activity
+            android:name=".activity.AppStatsUpdateActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

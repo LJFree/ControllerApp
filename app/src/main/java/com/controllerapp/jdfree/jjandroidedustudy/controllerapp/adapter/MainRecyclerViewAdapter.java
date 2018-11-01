@@ -165,7 +165,6 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     public void changeItem(List<AppListModel> list) {
         mData = list;
-//        notifyDataSetChanged();
         notifyItemRangeChanged(0, mData.size());
     }
 

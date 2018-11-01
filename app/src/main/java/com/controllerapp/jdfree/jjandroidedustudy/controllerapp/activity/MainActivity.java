@@ -9,16 +9,12 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
+import android.util.Log;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
@@ -30,16 +26,20 @@ import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.MainRecy
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainRecyclerViewAdapter.onClicked, DeleteDialogFragment.onDeleteListener {
+public class MainActivity extends AppCompatActivity implements MainRecyclerViewAdapter.onClicked {
 
-    private static final int REQUEST_CODE = 1000;
+    private static final int APP_LIST_REQUEST_CODE = 1000;
     public static final String NOT_APP_LIST = "notAppList";
     public static final String SELECT_ALL_APP_INFO = "selectAllAppInfo";
     public static final String CHECK_CONTROLLER = "check_control";
     public static final String APP_LIST_SAVE = "mAppListSave";
     public static final String APP_LIST = "mAppList";
+    public static final String APP_LIST_MODEL = "AppListModel";
+    public static final int UPDATE_REQUEST_CODE = 1001;
+    public static final String APP_LIST_POSITION = "appListPosition";
 
     public List<AppListModel> mAppList;
     public MainRecyclerViewAdapter mAdapter;
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     private boolean mBound;
     private LinearLayout mLinearLayoutFragmentStats;
     private StatsFragment mFragmentStats;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,23 +94,30 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         intent.putParcelableArrayListExtra(NOT_APP_LIST, (ArrayList<? extends Parcelable>) mAppList);
 
-        startActivityForResult(intent, REQUEST_CODE);
+        startActivityForResult(intent, APP_LIST_REQUEST_CODE);
     }
 
     @Override
     public void onLongClicked(int position) {
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
-        new DeleteDialogFragment().setDeleteListener(this, position).show(getSupportFragmentManager(), "delete");
+        AppListModel model = mAppList.get(position);
+
+        Intent intent = new Intent(this, AppStatsUpdateActivity.class);
+
+        intent.putParcelableArrayListExtra(APP_LIST_MODEL, (ArrayList<? extends Parcelable>) mAppList);
+        intent.putExtra(APP_LIST_POSITION, position);
+
+        startActivityForResult(intent, UPDATE_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+        if (requestCode == APP_LIST_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-            final Intent intent = data;
+            Intent intent = data;
             AppListModel appModel = intent.getParcelableExtra(SELECT_ALL_APP_INFO);
 
             mAdapter.addItem(0, appModel);
@@ -119,10 +125,24 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
             listSave();
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == UPDATE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+
+            Intent intent = data;
+
+            int p = intent.getIntExtra(MainActivity.APP_LIST_POSITION, -1);
+
+            if (p == -1) {
+                mAppList = intent.getParcelableArrayListExtra(MainActivity.APP_LIST_MODEL);
+
+                mAdapter.changeItem(mAppList);
+
+                goService();
+            } else {
+                deleteListener(p);
+            }
         }
     }
 
-    @Override
     public void deleteListener(int position) {
         mAdapter.removeItem(position);
 
@@ -157,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
-        Intent intent = new Intent(this, CheckTimeAppControllerService.class);
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
         listSave();
 
@@ -205,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         editor.putString(APP_LIST, appListModelStrings.toString());
         editor.apply();
-
     }
 
     private void loadList() {
@@ -248,6 +266,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
     @Override
     public void onBackPressed() {
-        new ExitDialogFragment().show(getSupportFragmentManager(), "exit");
+        if (mLinearLayoutFragmentStats.getVisibility() == LinearLayout.VISIBLE) {
+            mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
+        } else {
+            new ExitDialogFragment().show(getSupportFragmentManager(), "exit");
+        }
     }
 }
