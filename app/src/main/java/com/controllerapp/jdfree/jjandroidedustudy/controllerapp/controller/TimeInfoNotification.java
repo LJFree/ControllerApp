@@ -32,8 +32,8 @@ public class TimeInfoNotification {
 
         // 필수 항목
         builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setContentTitle("알림제목");
-        builder.setContentText("알림 세부 텍스트");
+        builder.setContentTitle("앱 제어 중");
+        builder.setContentText("제어 중인 앱을 확인하시려면 클릭하세요!");
 
         // 액션 정의
 //        Intent intent = new Intent(this, MainActivity.class);
@@ -46,8 +46,10 @@ public class TimeInfoNotification {
         builder.setContentIntent(pendingIntent);
 
         // 큰 아이콘 설정
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.logo);
         builder.setLargeIcon(largeIcon);
+
+        builder.setSmallIcon(R.mipmap.logo);
 
         // 색상 변경
         builder.setColor(Color.RED);
