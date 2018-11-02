@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         super.onStop();
         if (mBound) {
             unbindService(mConnection);
+            listSave();
             mBound = false;
         }
     }

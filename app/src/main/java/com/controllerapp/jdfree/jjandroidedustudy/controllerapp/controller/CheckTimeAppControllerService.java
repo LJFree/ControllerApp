@@ -112,9 +112,9 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             while (isCheck) {
                 Thread.sleep(1000);
 
-                initData();
 
                 if (mList != null) {
+                    initData();
 
                     String packageName;
 
@@ -153,9 +153,9 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     }
 
     private void initData() {
+        if (date != Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
 
-        for (int i = 0; i < mList.size(); i++) {
-            if (date != Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+            for (int i = 0; i < mList.size(); i++) {
                 AppListModel model = mList.get(i);
 
                 model.setStartDayTime(0);
@@ -202,14 +202,15 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                             int timeSecond = mList.get(i).getStartDayTime() + 1;
                             int minute = mList.get(i).getOverDayTime();
 
-                            if (minute == 0) {
+                            if (minute <= 0) {
                                 if (!packageName.equals(currentPackageName)) {
                                     AppListModel list = mList.get(i);
                                     packageName = currentPackageName;
 
                                     mAppControlActivityIntent.putExtra(CONTROL_APP_MODEL, list);
                                     mAppControlActivityIntent.putExtra(TIME_OUT, true);
-                                    mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+//                                    mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                                    mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                                     startActivity(mAppControlActivityIntent);
                                 }
                             } else {

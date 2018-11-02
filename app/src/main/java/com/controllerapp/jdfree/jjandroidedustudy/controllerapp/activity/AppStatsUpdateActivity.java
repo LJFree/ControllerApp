@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class AppStatsUpdateActivity extends AppCompatActivity implements DeleteD
     private ImageView mImageView;
     private TextView mTextView;
     private AppListModel mAppModel;
+    private int mATime;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -49,9 +51,9 @@ public class AppStatsUpdateActivity extends AppCompatActivity implements DeleteD
         mImageView.setImageDrawable(mAppModel.getIcon(getPackageManager()));
         mTextView.setText(mAppModel.getName());
 
-        int aTime = mAppModel.getAllDayTime();
-        int h = aTime / 60;
-        int m = aTime - (h * 60);
+        mATime = mAppModel.getAllDayTime();
+        int h = mATime / 60;
+        int m = mATime - (h * 60);
 
         mTimePicker.setIs24HourView(true);
         mTimePicker.setHour(h);
@@ -68,9 +70,19 @@ public class AppStatsUpdateActivity extends AppCompatActivity implements DeleteD
             Toast.makeText(this, "수정할 시간이 0분 이상이어야 합니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-        mAppModel.setAllDayTime(updateTime);
-        mAppModel.setOverDayTime(updateTime);
-        mAppModel.setStartDayTime(0);
+
+        if (mATime == updateTime) {
+            Toast.makeText(this, "수정할 시간이 기존 시간과 달라야합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            if (mAppModel.getStartDayTime() < 0) {
+                mAppModel.setOverDayTime(0);
+                mAppModel.setStartDayTime(updateTime * 60);
+            } else {
+                mAppModel.setAllDayTime(updateTime);
+            }
+            mAppModel.setOverDayTime(+(updateTime - (mAppModel.getStartDayTime() / 60)));
+        }
 
         mListModel.set(mPosition, mAppModel);
 
@@ -78,7 +90,9 @@ public class AppStatsUpdateActivity extends AppCompatActivity implements DeleteD
         intent.putParcelableArrayListExtra(MainActivity.APP_LIST_MODEL, (ArrayList<? extends Parcelable>) mListModel);
 
         setResult(RESULT_OK, intent);
+
         finish();
+
     }
 
     public void deleteButton(View view) {
