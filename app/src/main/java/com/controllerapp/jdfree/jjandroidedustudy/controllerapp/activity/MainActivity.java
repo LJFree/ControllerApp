@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     public static final String APP_LIST_MODEL = "AppListModel";
     public static final int UPDATE_REQUEST_CODE = 1001;
     public static final String APP_LIST_POSITION = "appListPosition";
+    public static final String EXIT = "0";
 
     public List<AppListModel> mAppList;
     public MainRecyclerViewAdapter mAdapter;
@@ -180,7 +181,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     protected void onStart() {
         super.onStart();
 
-//        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
+        Intent intent = getIntent();
+        int exit = intent.getIntExtra(EXIT, 0);
+
+        if (exit != 0) {
+            finish();
+        }
 
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
         listSave();

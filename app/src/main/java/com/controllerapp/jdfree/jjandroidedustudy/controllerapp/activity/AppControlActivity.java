@@ -56,6 +56,7 @@ public class AppControlActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intent.putExtra(MainActivity.EXIT, 1);
         startActivity(intent);
         finish();
     }
