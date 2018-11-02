@@ -1,4 +1,4 @@
-package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.deleteitem;
+package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,11 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
-
 public class DeleteDialogFragment extends DialogFragment {
-
-    private int position;
 
     private onDeleteListener mDeleteListener;
 

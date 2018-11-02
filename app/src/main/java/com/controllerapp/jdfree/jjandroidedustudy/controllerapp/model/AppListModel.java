@@ -15,7 +15,6 @@ public class AppListModel implements Parcelable {
     private int overDayTime;
     private int startDayTime;
 
-    //////////////////////////////////////////////////////////////////////////////////////////
     public AppListModel() {
     }
 
@@ -53,7 +52,6 @@ public class AppListModel implements Parcelable {
         this.name = name;
         this.packageName = packageName;
     }
-//////////////////////////////////////////////////////////////////////////////////////////
 
     public AppListModel(String name, String packageName, int allDayTime) {
         this.name = name;

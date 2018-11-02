@@ -4,16 +4,13 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.List;

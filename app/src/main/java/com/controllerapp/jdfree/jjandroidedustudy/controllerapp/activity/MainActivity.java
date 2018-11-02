@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -13,20 +12,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.controller.CheckTimeAppControllerService;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.StatsFragment;
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.deleteitem.DeleteDialogFragment;
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.exit.ExitDialogFragment;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.ExitDialogFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.adapter.MainRecyclerViewAdapter;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainRecyclerViewAdapter.onClicked {
@@ -40,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     public static final String APP_LIST_MODEL = "AppListModel";
     public static final int UPDATE_REQUEST_CODE = 1001;
     public static final String APP_LIST_POSITION = "appListPosition";
-    public static final String EXIT = "0";
 
     public List<AppListModel> mAppList;
     public MainRecyclerViewAdapter mAdapter;
@@ -181,13 +176,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     protected void onStart() {
         super.onStart();
 
-        Intent intent = getIntent();
-        int exit = intent.getIntExtra(EXIT, 0);
-
-        if (exit != 0) {
-            finish();
-        }
-
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
         listSave();
     }
@@ -270,15 +258,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-//        if (mAppList.size() != 0) {
-//            stopService(mIntent);
-
-//            Intent intent = getPackageManager().getLaunchIntentForPackage(this.getPackageName());
-//            startActivity(intent);
-
-//            goService();
-//        }
     }
 
     @Override

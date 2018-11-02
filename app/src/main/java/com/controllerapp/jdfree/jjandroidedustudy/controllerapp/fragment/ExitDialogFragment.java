@@ -1,4 +1,4 @@
-package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.exit;
+package com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;

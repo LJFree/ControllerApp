@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +13,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.deleteitem.DeleteDialogFragment;
+import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.fragment.DeleteDialogFragment;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
 
 import java.util.ArrayList;

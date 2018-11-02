@@ -10,7 +10,6 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.AppControlActivity;
@@ -56,15 +55,12 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        if ("startForeground".equals(intent.getAction())) {
 
         date = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
         mNotification = new TimeInfoNotification(this);
 
         startForeground(1, mNotification.getBuilder().build());
-
-//        } else if (mThread == null) {
         isCheck = true;
 
         mThread = new Thread(this);
@@ -90,7 +86,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             isCheck = false;
             mPlayer.stop();
             if (mThread != null) {
-//                mThread.interrupt();
                 mThread = null;
             }
             this.stopSelf();
@@ -102,7 +97,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     @Override
     public void run() {
         try {
-//            Intent intent = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
             mAppControlActivityIntent = new Intent(this, AppControlActivity.class);
 
             UsageEvents usageEvents;
@@ -146,9 +140,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             e.printStackTrace();
         } finally {
             isCheck = false;
-//            mThread.stop();
-//            mThread.destroy();
-//            this.stopSelf();
         }
     }
 
