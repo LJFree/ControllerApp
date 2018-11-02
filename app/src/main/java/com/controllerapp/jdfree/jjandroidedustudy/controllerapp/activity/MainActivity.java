@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     public MainRecyclerViewAdapter mAdapter;
     private Intent mIntent;
 
-    private CheckTimeAppControllerService mService;
     private boolean mBound;
     private LinearLayout mLinearLayoutFragmentStats;
     private StatsFragment mFragmentStats;
@@ -104,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     public void onLongClicked(int position) {
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
-        AppListModel model = mAppList.get(position);
-
         Intent intent = new Intent(this, AppStatsUpdateActivity.class);
 
         intent.putParcelableArrayListExtra(APP_LIST_MODEL, (ArrayList<? extends Parcelable>) mAppList);
@@ -120,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         if (requestCode == APP_LIST_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-            Intent intent = data;
-            AppListModel appModel = intent.getParcelableExtra(SELECT_ALL_APP_INFO);
+            AppListModel appModel = data.getParcelableExtra(SELECT_ALL_APP_INFO);
 
             mAdapter.addItem(0, appModel);
             goService();
@@ -130,12 +126,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
         } else if (requestCode == UPDATE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-            Intent intent = data;
-
-            int p = intent.getIntExtra(MainActivity.APP_LIST_POSITION, -1);
+            int p = data.getIntExtra(MainActivity.APP_LIST_POSITION, -1);
 
             if (p == -1) {
-                mAppList = intent.getParcelableArrayListExtra(MainActivity.APP_LIST_MODEL);
+                mAppList = data.getParcelableArrayListExtra(MainActivity.APP_LIST_MODEL);
 
                 mAdapter.changeItem(mAppList);
 
@@ -195,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         public void onServiceConnected(ComponentName name, IBinder service) {
             CheckTimeAppControllerService.CheckTimeAppControlBinder binder = (CheckTimeAppControllerService.CheckTimeAppControlBinder) service;
 
-            mService = binder.getService();
+            CheckTimeAppControllerService mService = binder.getService();
             mBound = true;
 
             if (mService.getList() != null && mService.getList().size() != 0) {

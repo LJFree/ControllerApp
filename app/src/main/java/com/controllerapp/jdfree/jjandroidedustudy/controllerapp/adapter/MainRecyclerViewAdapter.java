@@ -31,16 +31,8 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     }
 
 
-    public MainRecyclerViewAdapter(List<AppListModel> mData) {
-        this.mData = mData;
-    }
-
     public MainRecyclerViewAdapter(List<AppListModel> mData, PackageManager mPm) {
         this.mData = mData;
-        this.mPm = mPm;
-    }
-
-    public void setPm(PackageManager mPm) {
         this.mPm = mPm;
     }
 
@@ -165,7 +157,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
         notifyItemRangeChanged(0, mData.size());
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView icon;
         private TextView name;
         private TextView time;

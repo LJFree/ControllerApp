@@ -15,19 +15,7 @@ public class AppListModel implements Parcelable {
     private int overDayTime;
     private int startDayTime;
 
-    public AppListModel() {
-    }
-
     public ApplicationInfo getAppInfo(PackageManager pm) {
-        try {
-            PackageInfo pi = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA);
-            return pi.applicationInfo;
-        } catch (PackageManager.NameNotFoundException e) {
-            return null;
-        }
-    }
-
-    public ApplicationInfo getAppInfo(PackageManager pm, String packageName) {
         try {
             PackageInfo pi = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA);
             return pi.applicationInfo;
@@ -40,22 +28,8 @@ public class AppListModel implements Parcelable {
         return getAppInfo(pm).loadIcon(pm);
     }
 
-    public String getName(PackageManager pm) {
-        return String.valueOf(getAppInfo(pm).loadLabel(pm));
-    }
-
-    public String getPackName(PackageManager pm) {
-        return getAppInfo(pm).packageName;
-    }
-
     public AppListModel(String name, String packageName) {
         this.name = name;
-        this.packageName = packageName;
-    }
-
-    public AppListModel(String name, String packageName, int allDayTime) {
-        this.name = name;
-        this.allDayTime = allDayTime;
         this.packageName = packageName;
     }
 
@@ -64,14 +38,6 @@ public class AppListModel implements Parcelable {
         this.packageName = packageName;
         this.allDayTime = allDayTime;
         this.overDayTime = overDayTime;
-    }
-
-    public AppListModel(String name, String packageName, int allDayTime, int overDayTime, int startDayTime) {
-        this.name = name;
-        this.packageName = packageName;
-        this.allDayTime = allDayTime;
-        this.overDayTime = overDayTime;
-        this.startDayTime = startDayTime;
     }
 
     protected AppListModel(Parcel in) {
@@ -104,10 +70,6 @@ public class AppListModel implements Parcelable {
 
     public String getPackageName() {
         return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 
     public int getAllDayTime() {

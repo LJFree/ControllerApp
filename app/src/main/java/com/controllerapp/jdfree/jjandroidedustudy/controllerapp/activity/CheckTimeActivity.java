@@ -70,7 +70,6 @@ public class CheckTimeActivity extends AppCompatActivity {
             Toast.makeText(this, "하루 동안 사용 할 시간을 입력해야 합니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-        startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), GRANT_REQUEST_CODE);
 
         if (!isGrant()) {
 

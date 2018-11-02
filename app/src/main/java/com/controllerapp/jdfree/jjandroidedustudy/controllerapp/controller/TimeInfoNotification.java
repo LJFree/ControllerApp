@@ -19,11 +19,11 @@ public class TimeInfoNotification {
 
     private final Context context;
 
-    public TimeInfoNotification(Context context) {
+    TimeInfoNotification(Context context) {
         this.context = context;
     }
 
-    public NotificationCompat.Builder getBuilder() {
+    NotificationCompat.Builder getBuilder() {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "default");
 

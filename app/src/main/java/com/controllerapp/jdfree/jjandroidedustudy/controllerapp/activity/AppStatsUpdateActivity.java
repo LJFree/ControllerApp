@@ -25,8 +25,6 @@ public class AppStatsUpdateActivity extends AppCompatActivity implements DeleteD
     private List<AppListModel> mListModel;
 
     private TimePicker mTimePicker;
-    private ImageView mImageView;
-    private TextView mTextView;
     private AppListModel mAppModel;
     private int mATime;
 
@@ -42,8 +40,8 @@ public class AppStatsUpdateActivity extends AppCompatActivity implements DeleteD
         mListModel = intent.getParcelableArrayListExtra(MainActivity.APP_LIST_MODEL);
 
         mTimePicker = findViewById(R.id.update_time_picker);
-        mImageView = findViewById(R.id.image_view_update_time_icon);
-        mTextView = findViewById(R.id.text_view_update_item);
+        ImageView mImageView = findViewById(R.id.image_view_update_time_icon);
+        TextView mTextView = findViewById(R.id.text_view_update_item);
 
         mAppModel = mListModel.get(mPosition);
 

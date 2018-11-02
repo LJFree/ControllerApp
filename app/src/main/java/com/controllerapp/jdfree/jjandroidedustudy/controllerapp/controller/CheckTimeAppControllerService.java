@@ -5,13 +5,11 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 
-import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.R;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.AppControlActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.model.AppListModel;
@@ -25,15 +23,11 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     public static final String TIME_OUT = "timeOut";
     private boolean isCheck;
     private List<AppListModel> mList;
-    private MediaPlayer mPlayer;
     private Thread mThread;
-    public static final String TAG = "abcasdf";
     private TimeInfoNotification mNotification;
 
     //    private int RETURN_VALUE = START_REDELIVER_INTENT;
     private int RETURN_VALUE = START_STICKY;
-
-    int time = 0;
 
     private IBinder mBinder = new CheckTimeAppControlBinder();
     private Intent mAppControlActivityIntent;
@@ -65,9 +59,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
         mThread = new Thread(this);
         mThread.start();
-        mPlayer = MediaPlayer.create(this, R.raw.song);
-        mPlayer.setLooping(true);
-//        mPlayer.start();
         if (intent != null) {
             mList = intent.getParcelableArrayListExtra(MainActivity.CHECK_CONTROLLER);
             currentPackageName = getApplicationContext().getPackageName();
@@ -84,7 +75,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             mNotification.hide();
 
             isCheck = false;
-            mPlayer.stop();
             if (mThread != null) {
                 mThread = null;
             }
@@ -171,11 +161,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
             isTime = time;
         }
 
-        public String getPackageName() {
-            return packageName;
-        }
-
-        public void setPackageName(String packageName) {
+        void setPackageName(String packageName) {
             this.packageName = packageName;
         }
 
@@ -200,7 +186,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
                                     mAppControlActivityIntent.putExtra(CONTROL_APP_MODEL, list);
                                     mAppControlActivityIntent.putExtra(TIME_OUT, true);
-//                                    mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                                     mAppControlActivityIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                                     startActivity(mAppControlActivityIntent);
                                 }
