@@ -26,7 +26,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     private PackageManager mPm;
 
     public interface onClicked {
-        void onDataClicked(AppListModel model, Drawable icon);
+        void onDataClicked(int position);
 
         void onAddClicked();
 
@@ -64,10 +64,10 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
         if (i != mData.size()) {
 
-            final AppListModel data = mData.get(i);
+            AppListModel data = mData.get(i);
             final int position = i;
 
-            final Drawable icon = data.getIcon(mPm);
+            Drawable icon = data.getIcon(mPm);
 
             String name = data.getName();
             int overTime = data.getOverDayTime();
@@ -81,19 +81,19 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
             viewHolder.icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onDataClicked(data, icon);
+                    clicked.onDataClicked(position);
                 }
             });
             viewHolder.name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onDataClicked(data, icon);
+                    clicked.onDataClicked(position);
                 }
             });
             viewHolder.time.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clicked.onDataClicked(data, icon);
+                    clicked.onDataClicked(position);
                 }
             });
 

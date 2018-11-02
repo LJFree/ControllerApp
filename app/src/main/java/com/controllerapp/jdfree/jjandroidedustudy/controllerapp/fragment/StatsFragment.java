@@ -44,16 +44,18 @@ public class StatsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void setModel(AppListModel model, Drawable icon) {
+    public void setModel(AppListModel model, PackageManager pm) {
 
 
         DecimalFormat format = new DecimalFormat("00");
 
+        Drawable icon = model.getIcon(pm);
         String appName = model.getName();
 
         int allTime = model.getAllDayTime() * 60;
         int sTime = model.getStartDayTime();
         int nTime = allTime - sTime;
+
 
         mImageView.setImageDrawable(icon);
         mAppNameTextView.setText(appName);

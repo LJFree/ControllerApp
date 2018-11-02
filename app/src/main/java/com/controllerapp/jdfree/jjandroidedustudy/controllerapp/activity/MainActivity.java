@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     private LinearLayout mLinearLayoutFragmentStats;
     private StatsFragment mFragmentStats;
 
+    private int dataSelectPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,17 +81,22 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     }
 
     @Override
-    public void onDataClicked(AppListModel model, Drawable icon) {
+    public void onDataClicked(int position) {
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
-        mFragmentStats.setModel(model, icon);
+        mFragmentStats.setModel(mAppList.get(position), getPackageManager());
 
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.VISIBLE);
         mLinearLayoutFragmentStats.requestFocus();
+
+        this.dataSelectPosition = position;
     }
 
     @Override
     public void onAddClicked() {
+
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
+
         Intent intent = new Intent(this, AllAppListControlActivity.class);
 
         intent.putParcelableArrayListExtra(NOT_APP_LIST, (ArrayList<? extends Parcelable>) mAppList);
@@ -147,9 +154,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         mAdapter.removeItem(position);
 
         if (mAppList.size() == 0) {
-            unbindService(mConnection);
             mBound = false;
-
             stopService(mIntent);
         } else {
             goService();
@@ -175,11 +180,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     protected void onStart() {
         super.onStart();
 
-        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
+//        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
         listSave();
-
     }
 
     @Override
@@ -200,9 +204,15 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
             mService = binder.getService();
             mBound = true;
 
-            if (mService.getList() != null) {
+            if (mService.getList() != null && mService.getList().size() != 0) {
                 mAppList = mService.getList();
                 mAdapter.changeItem(mAppList);
+
+                if (mLinearLayoutFragmentStats.getVisibility() == LinearLayout.VISIBLE) {
+                    AppListModel model = mAppList.get(dataSelectPosition);
+
+                    mFragmentStats.setModel(model, getPackageManager());
+                }
             }
         }
 

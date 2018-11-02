@@ -7,6 +7,10 @@
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
+    <uses-permission xmlns:tools="http://schemas.android.com/tools"
+        android:name="android.permission.ACTION_USAGE_ACCESS_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
