@@ -44,25 +44,23 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
 
         PackageManager pm = getPackageManager();
-        Intent intent1 = new Intent(Intent.ACTION_MAIN, null);
+        Intent intent1 = new Intent(Intent.ACTION_MAIN, null);  // 실행 가능한 패키지 데이터 받기
         intent1.addCategory(Intent.CATEGORY_LAUNCHER);
-
-
         mAppInfoList = pm.queryIntentActivities(intent1, 0);
 
         Intent intent = getIntent();
-
-        List<AppListModel> nonDataList = intent.getParcelableArrayListExtra(MainActivity.NOT_APP_LIST);
+        List<AppListModel> nonDataList = intent.getParcelableArrayListExtra(MainActivity.NOT_APP_LIST); // 데이터 받기
 
         if (nonDataList == null) {
             nonDataList = new ArrayList<>();
         }
+
         // 제어
         nonDataList.add(new AppListModel("설정", "com.android.settings"));
 
-        List<ResolveInfo> tempList = mAppInfoList;
+        List<ResolveInfo> tempList = mAppInfoList;  // 실행 가능한 앱 리스트 저장
 
-        for (AppListModel nonData : nonDataList) {
+        for (AppListModel nonData : nonDataList) {  // 제어되고 있는 앱 추려내기
             for (int i = mAppInfoList.size() - 1; i >= 0; i--) {
                 if (nonData.getPackageName().equals(mAppInfoList.get(i).activityInfo.packageName)) {
                     tempList.remove(i);
@@ -95,8 +93,9 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_GO) {
 
-                    onSearchButtonClicked();
+                    onSearchButtonClicked();    // 검색
 
+                    // 키보드 비활성화
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -107,6 +106,8 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
         });
     }
 
+
+    // 리사이클러뷰 클릭 이벤트
     @Override
     public void onClicked(AppListModel model) {
 
@@ -117,6 +118,8 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
         startActivityForResult(intent, REQUEST_CODE);
     }
 
+
+    // 검색 버튼 클릭 이벤트
     private void onSearchButtonClicked() {
         TextView textView = findViewById(R.id.search_EditView);
         String textString = textView.getText().toString();
@@ -128,7 +131,7 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
             List<ResolveInfo> searchList = new ArrayList<>();
 
-            for (ResolveInfo resolveInfo : mAppInfoList) {
+            for (ResolveInfo resolveInfo : mAppInfoList) {  // 검색 필터링
                 String appName = String.valueOf(resolveInfo.loadLabel(getPackageManager()));
                 String name = resolveInfo.activityInfo.name;
                 String packageName = resolveInfo.activityInfo.packageName;
@@ -141,18 +144,20 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
                 }
             }
 
-            if (searchList.size() == 0) {
+            if (searchList.size() == 0) {   // 내용이 없을 경우 초기화
                 mAdapter.setData(mAppInfoList);
                 textView.setText("");
                 Toast.makeText(this, "검색 실패", Toast.LENGTH_SHORT).show();
-            } else {
+            } else {    // 있을 경우 필터링 데이터만 나오게 하기
                 mAdapter.setData(searchList);
                 Toast.makeText(this, "검색 완료", Toast.LENGTH_SHORT).show();
             }
 
         }
+        // 데이터 수정됐다고 알림
         mAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -164,11 +169,12 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
             Intent intent = new Intent();
 
+            // 데이터 저장
             model.setAllDayTime(time);
             model.setOverDayTime(time);
             model.setStartDayTime(0);
 
-            intent.putExtra(MainActivity.SELECT_ALL_APP_INFO, model);
+            intent.putExtra(MainActivity.SELECT_ALL_APP_INFO, model);   // 데이터 보내기
 
             setResult(RESULT_OK, intent);
             finish();

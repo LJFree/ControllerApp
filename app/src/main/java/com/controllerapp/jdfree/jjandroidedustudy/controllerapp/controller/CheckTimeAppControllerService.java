@@ -47,6 +47,8 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         super.onCreate();
     }
 
+
+    // 서비스 시작
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -68,6 +70,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         return RETURN_VALUE;
     }
 
+    // 서비스 종료
     @Override
     public void onDestroy() {
         if (mNotification != null) {
@@ -83,6 +86,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         }
     }
 
+    // 1초마다 어떤 앱이 실행 되는지 파악
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
@@ -108,7 +112,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                     UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
                     usageEvents = usageStatsManager.queryEvents(beginTime, endTime);
 
-
+                    // 앱이 교체됐는지 매번 반복하여 파악
                     while (usageEvents.hasNextEvent()) {
                         UsageEvents.Event event = new UsageEvents.Event();
                         usageEvents.getNextEvent(event);
@@ -117,7 +121,8 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                             packageName = event.getPackageName();
 
                             timeCalculation.setPackageName(packageName);
-
+                            // 다른 앱이 활성화 됐으며 제어 하려는 패키지가 일치할 경우
+                            // 시간 체크 시작
                             if (!timeCalculation.isTime()) {
                                 timeCalculation.setTime(true);
                                 timeCalculation.start();
@@ -133,6 +138,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         }
     }
 
+    // 데이터 초기화(00시 시작)
     private void initData() {
         if (date != Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
 
@@ -148,6 +154,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
     }
 
 
+    // 시간 체크 이벤트
     private class TimeCalculationThread extends Thread {
 
         private boolean isTime = false;
@@ -168,6 +175,8 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
         private TimeCalculationThread() {
         }
 
+
+        // 켜지는 동안 1초마다 +1초 사용 함으로 설정
         @Override
         public void run() {
             try {
@@ -181,6 +190,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
 
                             if (minute <= 0) {
                                 if (!packageName.equals(currentPackageName)) {
+                                    // 사용하는 앱이 시간 초과할 경우 제어
                                     AppListModel list = mList.get(i);
                                     packageName = currentPackageName;
 
@@ -190,7 +200,6 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                                     startActivity(mAppControlActivityIntent);
                                 }
                             } else {
-
                                 if (timeSecond % 60 == 0) {
                                     minute--;
                                     mList.get(i).setOverDayTime(minute);

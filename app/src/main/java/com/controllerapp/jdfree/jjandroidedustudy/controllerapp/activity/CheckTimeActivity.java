@@ -43,7 +43,7 @@ public class CheckTimeActivity extends AppCompatActivity {
         TextView textViewAppName = findViewById(R.id.text_view_check_item);
 
         mTimePicker = findViewById(R.id.time_picker);
-
+        // 타임 피커 초기화 0시 0분
         mTimePicker.setIs24HourView(true);
         mTimePicker.setHour(0);
         mTimePicker.setMinute(0);
@@ -63,8 +63,7 @@ public class CheckTimeActivity extends AppCompatActivity {
 
         int hour = mTimePicker.getHour();
         int minute = mTimePicker.getMinute();
-        mAllTime = (hour * 60) + minute;
-
+        mAllTime = (hour * 60) + minute;    // 시간 설정(시와 분을 분으로 변경)
 
         if (mAllTime == 0) {
             Toast.makeText(this, "하루 동안 사용 할 시간을 입력해야 합니다.", Toast.LENGTH_SHORT).show();
@@ -72,7 +71,7 @@ public class CheckTimeActivity extends AppCompatActivity {
         }
 
         if (!isGrant()) {
-
+            // 사용자 정보 권한이 없을 경우
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle("권한 설정");
@@ -80,6 +79,7 @@ public class CheckTimeActivity extends AppCompatActivity {
             builder.setPositiveButton("설정", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    // 사용자 정보 권한 설정 창
                     startActivityForResult(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), GRANT_REQUEST_CODE);
                 }
             });
@@ -96,6 +96,7 @@ public class CheckTimeActivity extends AppCompatActivity {
         }
     }
 
+    // 서비스 시작 시 뒤로가기
     private void startIntent() {
         Intent intent = new Intent();
 
@@ -105,6 +106,7 @@ public class CheckTimeActivity extends AppCompatActivity {
         finish();
     }
 
+    // 접근 허가 여부
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -116,6 +118,7 @@ public class CheckTimeActivity extends AppCompatActivity {
         }
     }
 
+    // 접근 허가 함수
     private boolean isGrant() {
         boolean granted;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {

@@ -47,143 +47,161 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
     private int dataSelectPosition;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLinearLayoutFragmentStats = findViewById(R.id.liner_layout_fragment_main_stats);
-        mLinearLayoutFragmentStats.setFocusableInTouchMode(true);
+        mLinearLayoutFragmentStats = findViewById(R.id.liner_layout_fragment_main_stats);   // 리니어 레이아웃(비활성화 위한)
+        mLinearLayoutFragmentStats.setFocusableInTouchMode(true);   // 선택 가능
 
-        mFragmentStats = (StatsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main_stats);
+        mFragmentStats = (StatsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main_stats);    // 앱 관리 정보 프리그먼트
 
-        mIntent = new Intent(this, CheckTimeAppControllerService.class);
+        mIntent = new Intent(this, CheckTimeAppControllerService.class);    // 서비스
 
-        mAppList = new ArrayList<>();
-        loadList();
+        mAppList = new ArrayList<>();   // 제어 관리 앱
+        loadList(); // 데이터 불러오기
 
-        RecyclerView recyclerView = findViewById(R.id.app_list_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.app_list_recycler_view);  // 리사이클러뷰
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);
-        mAdapter = new MainRecyclerViewAdapter(mAppList, getPackageManager());
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 3);  // 리사이클러뷰 레이아웃
+        mAdapter = new MainRecyclerViewAdapter(mAppList, getPackageManager());  // 리사이클러뷰 어뎁터
 
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(layoutManager);   // 리사이클러뷰 레이아웃 설정
+        recyclerView.setAdapter(mAdapter);  // 리사이클러뷰 어뎁터 설정
 
-        mAdapter.onSetClicked(this);
+        mAdapter.onSetClicked(this);    // 리사이클러뷰 이벤트
 
     }
 
+    // ICon 클릭 이벤트(Data 부분)
     @Override
     public void onDataClicked(int position) {
-        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);    // 리니어 레이아웃(앱 관리 정보 프리그 먼트) 비활성화
 
-        mFragmentStats.setModel(mAppList.get(position), getPackageManager());
+        mFragmentStats.setModel(mAppList.get(position), getPackageManager());   // 앱 관리 정보 데이터 수정
 
-        mLinearLayoutFragmentStats.setVisibility(LinearLayout.VISIBLE);
-        mLinearLayoutFragmentStats.requestFocus();
+        mLinearLayoutFragmentStats.setVisibility(LinearLayout.VISIBLE);     // 리니어 레이아웃(앱 관리 정보 프리그 먼트) 활성화
+        mLinearLayoutFragmentStats.requestFocus();    // 리니어 레이아웃(앱 관리 정보 프리그 먼트) 선택
 
-        this.dataSelectPosition = position;
+        this.dataSelectPosition = position; // 선택 포지션 저장
     }
 
+    // ICon 클릭 이벤트(맨 뒤 + ICon)
     @Override
     public void onAddClicked() {
 
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
         Intent intent = new Intent(this, AllAppListControlActivity.class);
-
-        intent.putParcelableArrayListExtra(NOT_APP_LIST, (ArrayList<? extends Parcelable>) mAppList);
-
+        intent.putParcelableArrayListExtra(NOT_APP_LIST, (ArrayList<? extends Parcelable>) mAppList);   // 데이터 전달
         startActivityForResult(intent, APP_LIST_REQUEST_CODE);
     }
 
+    // ICon 긴 클릭 이벤트(데이터 수정, 삭제 관리 페이지로 이동)
     @Override
     public void onLongClicked(int position) {
         mLinearLayoutFragmentStats.setVisibility(LinearLayout.GONE);
 
         Intent intent = new Intent(this, AppStatsUpdateActivity.class);
 
-        intent.putParcelableArrayListExtra(APP_LIST_MODEL, (ArrayList<? extends Parcelable>) mAppList);
+        intent.putParcelableArrayListExtra(APP_LIST_MODEL, (ArrayList<? extends Parcelable>) mAppList); // 데이터 전달
         intent.putExtra(APP_LIST_POSITION, position);
 
         startActivityForResult(intent, UPDATE_REQUEST_CODE);
     }
 
+    // 다른 페이지에서 반환 받는 이벤트
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // 데이터 추가 부분
         if (requestCode == APP_LIST_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
-            AppListModel appModel = data.getParcelableExtra(SELECT_ALL_APP_INFO);
+            AppListModel appModel = data.getParcelableExtra(SELECT_ALL_APP_INFO);   // 데이터 받기
 
-            mAdapter.addItem(0, appModel);
-            goService();
+            mAdapter.addItem(0, appModel);  // 데이터 추가
+            goService();    // 서비스 시작
 
-            listSave();
+            listSave(); // 데이터 저장
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
+
+
+            // 데이터 수정 및 삭제
         } else if (requestCode == UPDATE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
 
             int p = data.getIntExtra(MainActivity.APP_LIST_POSITION, -1);
 
             if (p == -1) {
-                mAppList = data.getParcelableArrayListExtra(MainActivity.APP_LIST_MODEL);
+                mAppList = data.getParcelableArrayListExtra(MainActivity.APP_LIST_MODEL);   // 데이터 받기
 
-                mAdapter.changeItem(mAppList);
+                mAdapter.changeItem(mAppList);  // 데이터 수정
 
-                goService();
+                goService();    // 서비스 재 시작
             } else {
-                deleteListener(p);
+                deleteListener(p);  // 데이터 삭제
             }
         }
     }
 
+    // 삭제 시 이벤트
     public void deleteListener(int position) {
-        mAdapter.removeItem(position);
+        mAdapter.removeItem(position);  // 데이터 삭제
+
 
         if (mAppList.size() == 0) {
+            // 데이터가 없으면 서비스 종료
             mBound = false;
             stopService(mIntent);
         } else {
+            // 데이터가 있으면 서비스 재시작
             goService();
         }
+
+        // 데이터 저장
         listSave();
         Toast.makeText(this, "앱 제어 삭제 완료", Toast.LENGTH_SHORT).show();
     }
 
-    private void goService() {
 
+    // 서비스 재시작
+    private void goService() {
+        // 서비스 종료
         stopService(mIntent);
 
-        mIntent.putParcelableArrayListExtra(CHECK_CONTROLLER, (ArrayList<? extends Parcelable>) mAppList);
+        mIntent.putParcelableArrayListExtra(CHECK_CONTROLLER, (ArrayList<? extends Parcelable>) mAppList);  // 데이터 보내기
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(mIntent);
+            startForegroundService(mIntent);    // 포그라운드 시작
         } else {
-            startService(mIntent);
+            startService(mIntent);  // 서비스 시작
         }
     }
 
+    // 화면 보일 때 이벤트
     @Override
     protected void onStart() {
         super.onStart();
-
+        // bind 서비스 시작
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
-        listSave();
+        listSave(); // 데이터 저장
     }
 
+    // 화면이 안보일 때 이벤트
     @Override
     protected void onStop() {
         super.onStop();
         if (mBound) {
-            unbindService(mConnection);
-            listSave();
+            unbindService(mConnection); // bind 서비스 중지
+            listSave(); // 데이터 저장
             mBound = false;
         }
     }
 
+    // bind 서비스 이벤트
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -193,9 +211,12 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
             mBound = true;
 
             if (mService.getList() != null && mService.getList().size() != 0) {
-                mAppList = mService.getList();
+                // 내용이 있다면 데이터 새로고침
+
+                mAppList = mService.getList();  //
                 mAdapter.changeItem(mAppList);
 
+                // 리니어 레이아웃이 활성화 됐다면 자동 새로고침
                 if (mLinearLayoutFragmentStats.getVisibility() == LinearLayout.VISIBLE) {
                     AppListModel model = mAppList.get(dataSelectPosition);
 
@@ -211,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     };
 
 
+    // 데이터 SharedPreferences 로 저장
     private void listSave() {
         SharedPreferences preferences = getSharedPreferences(APP_LIST_SAVE, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -225,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         editor.apply();
     }
 
+    // 데이터 불러오기
     private void loadList() {
         SharedPreferences preferences = getSharedPreferences(APP_LIST_SAVE, MODE_PRIVATE);
 
@@ -249,11 +272,13 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         }
     }
 
+    // 종료 이벤트
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
+    // 뒤로가기 버튼 클릭 이벤트
     @Override
     public void onBackPressed() {
         if (mLinearLayoutFragmentStats.getVisibility() == LinearLayout.VISIBLE) {

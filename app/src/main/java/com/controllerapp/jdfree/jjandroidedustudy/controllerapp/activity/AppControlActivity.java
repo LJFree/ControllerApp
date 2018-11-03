@@ -23,27 +23,25 @@ public class AppControlActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.image_view_app_control_icon);
         TextView textView = findViewById(R.id.text_view_app_control_item);
 
-        AppListModel model = intent.getParcelableExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL);
+        AppListModel model = intent.getParcelableExtra(CheckTimeAppControllerService.CONTROL_APP_MODEL);    // 데이터 불러오기
 
-        Drawable appIcon = model.getIcon(getPackageManager());
-        String appName = model.getName();
+        Drawable appIcon = model.getIcon(getPackageManager());  // 아이콘 불러오기
+        String appName = model.getName();   // 패키지 이름 불러오기
 
-
-        imageView.setImageDrawable(appIcon);
-        textView.setText(appName);
+        imageView.setImageDrawable(appIcon);    // 아이콘 설정
+        textView.setText(appName);  // 패키지 이름 설정
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+        finish();   // 화면이 안보일 시 종료
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        finish();   // 뒤로가기 시 종료
     }
-
 }
