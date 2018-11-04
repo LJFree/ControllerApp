@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         mAdapter.onSetClicked(this);    // 리사이클러뷰 이벤트
 
+        if (mAppList.size() != 0) {
+            goService();
+        }
+
     }
 
     // ICon 클릭 이벤트(Data 부분)
@@ -196,9 +200,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
         super.onStop();
         if (mBound) {
             unbindService(mConnection); // bind 서비스 중지
-            listSave(); // 데이터 저장
             mBound = false;
         }
+        listSave(); // 데이터 저장
     }
 
     // bind 서비스 이벤트
@@ -262,10 +266,11 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
                 String name = splitCol[0];
                 String packageName = splitCol[1];
+                int allDayTime = Integer.parseInt(splitCol[2]);
+                int overDayTime = Integer.parseInt(splitCol[3]);
+                int startDayTime = Integer.parseInt(splitCol[4]);
 
-                int time = Integer.parseInt(splitCol[3]);
-
-                AppListModel model = new AppListModel(name, packageName, time, time);
+                AppListModel model = new AppListModel(name, packageName, allDayTime, overDayTime, startDayTime);
 
                 mAppList.add(model);
             }
@@ -276,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        listSave();
     }
 
     // 뒤로가기 버튼 클릭 이벤트

@@ -33,11 +33,12 @@ public class AppListModel implements Parcelable {
         this.packageName = packageName;
     }
 
-    public AppListModel(String name, String packageName, int allDayTime, int overDayTime) {
+    public AppListModel(String name, String packageName, int allDayTime, int overDayTime, int startDayTime) {
         this.name = name;
         this.packageName = packageName;
         this.allDayTime = allDayTime;
         this.overDayTime = overDayTime;
+        this.startDayTime = startDayTime;
     }
 
     protected AppListModel(Parcel in) {
