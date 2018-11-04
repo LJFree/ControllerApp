@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         // bind 서비스 시작
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+
     }
 
     // 화면이 안보일 때 이벤트
@@ -222,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
                     mFragmentStats.setModel(model, getPackageManager());
                 }
+
+                listSave();
             }
         }
 
