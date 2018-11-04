@@ -57,6 +57,8 @@ public class AllAppListControlActivity extends AppCompatActivity implements AppL
 
         // 제어
         nonDataList.add(new AppListModel("설정", "com.android.settings"));
+        nonDataList.add(new AppListModel("연락처", "com.samsung.android.contacts"));
+        nonDataList.add(new AppListModel("락엔락", getPackageName()));
 
         List<ResolveInfo> tempList = mAppInfoList;  // 실행 가능한 앱 리스트 저장
 
