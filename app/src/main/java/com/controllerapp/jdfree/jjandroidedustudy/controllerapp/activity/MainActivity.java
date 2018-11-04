@@ -74,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         mAdapter.onSetClicked(this);    // 리사이클러뷰 이벤트
 
-//        if (mAppList.size() != 0) {
-//            goService();
-//        }
-
     }
 
     // ICon 클릭 이벤트(Data 부분)
@@ -189,9 +185,14 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     @Override
     protected void onStart() {
         super.onStart();
+
         // bind 서비스 시작
         bindService(mIntent, mConnection, BIND_AUTO_CREATE);
-        listSave(); // 데이터 저장
+
+        if (mAppList.size() != 0) {
+            goService();    // 서비스 시작
+        }
+
     }
 
     // 화면이 안보일 때 이벤트
@@ -226,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
                     mFragmentStats.setModel(model, getPackageManager());
                 }
+
+                listSave();
             }
         }
 
@@ -280,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     // 종료 이벤트
     @Override
     protected void onDestroy() {
-//        listSave();
+        listSave();
         super.onDestroy();
     }
 
