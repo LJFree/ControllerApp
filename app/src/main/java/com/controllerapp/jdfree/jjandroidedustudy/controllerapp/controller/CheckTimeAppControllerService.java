@@ -9,6 +9,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.AppControlActivity;
 import com.controllerapp.jdfree.jjandroidedustudy.controllerapp.activity.MainActivity;
@@ -124,6 +125,7 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                             // 다른 앱이 활성화 됐으며 제어 하려는 패키지가 일치할 경우
                             // 시간 체크 시작
                             if (!timeCalculation.isTime()) {
+
                                 timeCalculation.setTime(true);
                                 timeCalculation.start();
                             }
@@ -188,7 +190,9 @@ public class CheckTimeAppControllerService extends Service implements Runnable {
                             int timeSecond = mList.get(i).getStartDayTime() + 1;
                             int minute = mList.get(i).getOverDayTime();
 
+
                             if (minute <= 0) {
+
                                 if (!packageName.equals(currentPackageName)) {
                                     // 사용하는 앱이 시간 초과할 경우 제어
                                     AppListModel list = mList.get(i);

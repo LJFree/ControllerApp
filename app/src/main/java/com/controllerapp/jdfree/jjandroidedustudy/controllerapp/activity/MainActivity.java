@@ -74,9 +74,9 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
 
         mAdapter.onSetClicked(this);    // 리사이클러뷰 이벤트
 
-        if (mAppList.size() != 0) {
-            goService();
-        }
+//        if (mAppList.size() != 0) {
+//            goService();
+//        }
 
     }
 
@@ -280,8 +280,8 @@ public class MainActivity extends AppCompatActivity implements MainRecyclerViewA
     // 종료 이벤트
     @Override
     protected void onDestroy() {
+//        listSave();
         super.onDestroy();
-        listSave();
     }
 
     // 뒤로가기 버튼 클릭 이벤트
